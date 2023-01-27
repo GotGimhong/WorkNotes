@@ -41,7 +41,7 @@ LogShaderCompilers: Error: Errors compiling global shader TSlateElementPSLineSeg
 LogShaderCompilers: Error:  /tmp/3135_593812915.metal(0): Xcode's metal shader compiler was not found, verify Xcode has been installed on this Mac and that it has been selected in Xocde > Preferences > Locations > Command-line Tools.
 ```
 
-该报错属于 Metal 材质编译报错，如果忽略则会导致游戏启动崩溃。原因同 [编译引擎时出现 ShaderCompileWorker 编译失败的问题](docs/mac_engine.md#编译引擎时出现-shadercompileworker-编译失败的问题) 。
+该报错属于 Metal 材质编译报错，如果忽略则会导致游戏启动崩溃。原因同 [编译引擎时出现 ShaderCompileWorker 编译失败的问题](mac_engine.md#编译引擎时出现-shadercompileworker-编译失败的问题) 。
 
 ### 使用 dis 证书打包 iOS 失败
 
@@ -60,11 +60,11 @@ LogShaderCompilers: Error:  /tmp/3135_593812915.metal(0): Xcode's metal shader c
 
 + [iOS 设备扫码即可查看 UDID](https://jingyan.baidu.com/article/a3a3f81127f0e18da2eb8a14.html)
 
-+ [iOS 包崩溃解析|iOS 的崩溃捕获-堆栈符号化-崩溃分析](https://juejin.im/post/5b9bccea6fb9a05d3a4b2472)
++ [iOS 包崩溃解析 | iOS 的崩溃捕获-堆栈符号化-崩溃分析](https://juejin.im/post/5b9bccea6fb9a05d3a4b2472)
 
-+ [iOS 包崩溃解析|解析 crash log（一）](https://zhuanlan.zhihu.com/p/59633692)
++ [iOS 包崩溃解析 | 解析 crash log（一）](https://zhuanlan.zhihu.com/p/59633692)
 
-+ [iOS 包崩溃解析|iOS 崩溃日志 ips 解析](https://www.cnblogs.com/mukekeheart/p/9449189.html)
++ [iOS 包崩溃解析 | iOS 崩溃日志 ips 解析](https://www.cnblogs.com/mukekeheart/p/9449189.html)
 
 + [删除旧的 iOS 证书](https://dawnarc.com/2018/03/ue4%E5%88%A0%E9%99%A4%E6%97%A7%E7%9A%84mobileprovision%E6%96%87%E4%BB%B6clean-ios-mobileprovision-history/)
 
