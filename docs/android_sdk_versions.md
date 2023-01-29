@@ -1,6 +1,6 @@
 # Android SDK 各种版本号的总结
 
-## 1. compileSdkVersion
+## compileSdkVersion
 
 + 告诉 Gradle 将要使用哪个 Android SDK 版本进行编译项目
 
@@ -28,7 +28,7 @@
 
 + 配置格式可以是 `android-{具体版本号}`，例如 android\-28；或者是 `matchndk`，表示以 NDK 的版本号为准；或者是 `latest`，表示以本地最高的 SDK 版本号为准
 
-## 2. minSdkVersion
+## minSdkVersion
 
 + 指定了 APK 对 Android 系统的最低版本要求，只有不小于这个版本的 Android 系统才能运行这个 APK
 
@@ -46,7 +46,7 @@
 
 + 配置方式是直接填入版本号数字，例如 23 。
 
-## 3. targetSdkVersion
+## targetSdkVersion
 
 + 相当于声明项目的 APK 可以在 \[`minSdkVersion`, `targetSdkVersion`\] 之间的任何一个 Android 系统版本下运行
 
