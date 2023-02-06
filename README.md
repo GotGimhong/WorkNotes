@@ -10,6 +10,8 @@
 
 + [蓝图接口](docs/blueprint_interface.md)
 
++ [蓝图细节面板的定制](docs/detail_customization.md)
+
 + [iOS 平台开发问题排查记录](docs/ios_development.md)
 
 + [iOS 打包](docs/ios_packaging.md)
