@@ -20,4 +20,8 @@
 
 + [软链接在 Mac 系统上的构建](docs/mac_symlink.md)
 
++ [多线程的定制](docs/thread_runnable.md)
+
++ [多线程的概述](docs/thread_summary.md)
+
 + [在 Windows 系统上构建 Metal Library](docs/windows_metal_library.md)
