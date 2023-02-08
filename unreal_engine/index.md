@@ -20,4 +20,8 @@
 
 + [多线程的概述](thread_summary.md)
 
++ [Windows 系统引擎的注册](windows_engine_registry.md)
+
 + [在 Windows 系统上构建 Metal Library](windows_metal_library.md)
+
++ [Windows 系统 Visual Studio 的安装](windows_visual_studio.md)
