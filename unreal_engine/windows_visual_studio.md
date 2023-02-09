@@ -19,8 +19,6 @@
 
     + 【手动包含】Windows 10 SDK (10.0.19041.0)
 
-    + 【手动包含】IntelliCode
-
 + 使用 C++ 的桌面开发
 
     + 【自动包含】C++ 核心桌面功能
@@ -28,8 +26,6 @@
     + 【手动包含】MSVC v142 - VS 2019 C++ x64/x86 生成工具(最新)
 
     + 【手动包含】Windows 10 SDK (10.0.19041.0)
-
-    + 【手动包含】IntelliCode
 
     + 【手动包含】MSVC v142 - VS 2019 C++ ARM64 生成工具(最新)
 
@@ -44,8 +40,6 @@
     + 【自动包含】通用 Windows 平台工具
 
     + 【自动包含】Windows 10 SDK (10.0.19041.0)
-
-    + 【手动包含】IntelliCode
 
 + 单个组件
 
@@ -74,3 +68,10 @@
     + .NET Framework 4.5 目标包
 
     + MSVC v142 - VS 2019 C++ ARM64 生成工具(最新)
+
+
+## 参考资料
+
++ [UE4.27 - 设置 Visual Studio](https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/VisualStudioSetup/)
+
++ [UE5.1 - 设置 Visual Studio](https://docs.unrealengine.com/5.1/en-US/setting-up-visual-studio-development-environment-for-cplusplus-projects-in-unreal-engine/)
