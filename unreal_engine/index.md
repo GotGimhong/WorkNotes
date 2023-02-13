@@ -12,6 +12,16 @@
 
     + [软链接在 Mac 系统上的构建](mac_symlink.md)
 
++ 对象系统
+
+    + [对象的管理](object_management.md)
+
+    + [对象的生命周期](object_lifecycle.md)
+
+    + [对象的垃圾回收](object_garbage_collection.md)
+
+    + [对象的引用和依赖](object_reference.md)
+
 + 蓝图
 
     + [蓝图接口](blueprint_interface.md)
