@@ -12,6 +12,8 @@
 
     + [软链接在 Mac 系统上的构建](mac_symlink.md)
 
+    + [编译问题汇总](compilation_questions.md)
+
 + 对象系统
 
     + [对象的管理](object_management.md)
