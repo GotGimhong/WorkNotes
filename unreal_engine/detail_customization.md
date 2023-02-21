@@ -193,3 +193,182 @@ void FMyPropCustomization::AddCustomDetails(const TSharedRef<IPropertyHandle> Pa
 ```
 
 完整示例可以参考引擎源码 SlateBrushCustomization\.h 和 SlateBrushCustomization\.cpp，它对 `FSlateBrush` 类型进行定制，实现了九宫格属性隐藏等功能。
+
+
+## 自定义蓝图类筛选
+
+`TSubclassOf` 和 `TAssetSubclassOf` 类型的蓝图属性，在细节面板中会以下拉菜单的形式呈现，在下拉菜单中会列出指定的蓝图类。例如 `TSubclassOf<AActor>` 类型蓝图属性对应的下拉菜单，会列出 `Actor` 及其所有的派生类。
+
+引擎还提供了 `AllowedClasses` 和 `DisallowedClasses` 两个元数据，用于定义额外需要包含和排除的类，示例如下。
+
+```c++
+/**
+ * 示例一：在下拉菜单中列出的蓝图类满足以下条件：
+   1. 是 Actor 的派生类
+   2. 是 MyActorA 或其派生类；如果 MyActorA 本身不是 Actor 的派生类，就不会被列出（不满足条件1）
+   3. 不是 MyActorB 或其派生类；如果 MyActorB 是 MyActorA 的基类，就不会被列出（优先排除原则）
+ */
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowedClasses = "MyActorA", DisallowedClasses = "MyActorB"))
+TSubclassOf<AActor> Actors;
+
+/**
+ * 示例二：多个类之间用逗号隔开
+ */
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowedClasses = "MyActorA,MyActorB,MyActorC", DisallowedClasses = "MyActorD,MyActorE,MyActorF"))
+TSubclassOf<AActor> Actors;
+```
+
+`AllowedClasses` 和 `DisallowedClasses` 元数据的作用十分有限，因为它们需要精确指定需要包含和排除的蓝图类，所以如果需要更复杂的蓝图类筛选，就需要实现一个 `IClassViewerFilter` 的派生类，提供自定义的蓝图类筛选逻辑。在 `IClassViewerFilter` 的派生类中，我们需要定义**已加载类**和**未加载类**的筛选逻辑。已加载类指筛选时，已经加载到内存中的蓝图类，包括**在 C++ 中定义的蓝图类**，以及**已经加载到内存中的纯蓝图类（Blueprint Generated Class）**，未加载类则相反，主要指**未加载到内存中的纯蓝图类**。针对蓝图细节面板的情况，由于引擎已经实现了一套固定的蓝图类筛选逻辑，我们只能通过修改引擎源码的方式来增加自定义的逻辑，以下是修改方法：
+
+1. PropertyCustomizationHelpers\.h 和 PropertyCustomizationHelpers\.cpp
+
+    在蓝图细节面板中，针对每个 `TSubclassOf` 和 `TAssetSubclassOf` 类型的蓝图属性，引擎都会通过一个 `SClassPropertyEntryBox` 类型的控件进行绘制，它定义在这两个代码中。
+
+    ```c++
+    // PropertyCustomizationHelpers.h
+
+    // ...
+    DECLARE_DELEGATE_OneParam(FOnSetClass, const UClass*);
+
+    /** 修改点1：增加一个委托类型，用于筛选已加载类 */
+    DECLARE_DELEGATE_RetVal_OneParam(bool, FOnPickLoadedClass, const UClass*);
+    /** 修改点2：增加一个委托类型，用于筛选未加载类 */
+    DECLARE_DELEGATE_RetVal_OneParam(bool, FOnPickUnloadedClass, const TSharedRef<const class IUnloadedBlueprintData>&);
+
+    class SClassPropertyEntryBox : public SCompoundWidget
+    {
+    public:
+        SLATE_BEGIN_ARGS(SClassPropertyEntryBox)
+            // ...
+            /** 修改点3：在 SClassPropertyEntryBox 类中增加一个 Slate 事件，关联一个用于筛选已加载类的委托 */
+            SLATE_EVENT(FOnPickLoadedClass, OnPickLoadedClass)
+            /** 修改点4：在 SClassPropertyEntryBox 类中增加一个 Slate 事件，关联一个用于筛选未加载类的委托 */
+            SLATE_EVENT(FOnPickUnloadedClass, OnPickUnloadedClass)
+        SLATE_END_ARGS()
+        // ...
+    };
+    // ...
+    ```
+
+    ```c++
+    // PropertyCustomizationHelpers.cpp
+
+    // ...
+    void SClassPropertyEntryBox::Construct(const FArguments& InArgs)
+    {
+        ChildSlot
+        [
+            SNew(SHorizontalBox)
+            +SHorizontalBox::Slot()
+            .VAlign(VAlign_Center)
+            [
+                SAssignNew(PropertyEditorClass, SPropertyEditorClass)
+                    // ...
+                    // 修改点5：在 SClassPropertyEntryBox 类的 Construct 函数中，向 SPropertyEditorClass 类传递用于筛选已加载类的委托
+                    .OnPickLoadedClass(InArgs._OnPickLoadedClass)
+                    // 修改点6：在 SClassPropertyEntryBox 类的 Construct 函数中，向 SPropertyEditorClass 类传递用于筛选未加载类的委托
+                    .OnPickUnloadedClass(InArgs._OnPickUnloadedClass)
+            ]
+        ];
+    }
+    // ...
+    ```
+
+2. SPropertyEditorClass\.h 和 SPropertyEditorClass\.cpp
+
+    `SClassPropertyEntryBox` 类的底层是 `SPropertyEditorClass` 类，这个类通过 `FPropertyEditorClassFilter` 类实现蓝图类的筛选。
+
+    ```c++
+    // SPropertyEditorClass.h
+
+    // ...
+    class SPropertyEditorClass : public SCompoundWidget
+    {
+    public:
+        SLATE_BEGIN_ARGS(SPropertyEditorClass)
+            // ...
+            // 修改点1：在 SPropertyEditorClass 类中增加一个 Slate 事件，关联一个用于筛选已加载类的委托
+            SLATE_EVENT(FOnPickLoadedClass, OnPickLoadedClass)
+            // 修改点2：在 SPropertyEditorClass 类中增加一个 Slate 事件，关联一个用于筛选未加载类的委托
+            SLATE_EVENT(FOnPickUnloadedClass, OnPickUnloadedClass)
+        SLATE_END_ARGS()
+        // ...
+    private:
+        // ...
+        // 修改点3：在 SPropertyEditorClass 类中声明一个用于筛选已加载类的委托
+        FOnPickLoadedClass OnPickLoadedClass;
+        // 修改点4：在 SPropertyEditorClass 类中声明一个用于筛选未加载类的委托
+        FOnPickUnloadedClass OnPickUnloadedClass;
+
+        void CreateClassFilter();
+    };
+    ```
+
+    ```c++
+    // SPropertyEditorClass.cpp
+
+    // ...
+    class FPropertyEditorClassFilter : public IClassViewerFilter
+    {
+    public:
+        // ...
+        // 修改点5：在 FPropertyEditorClassFilter 类中声明一个用于筛选已加载类的委托
+        FOnPickLoadedClass CustomLoadedClassFilterFunction;
+        // 修改点6：在 FPropertyEditorClassFilter 类中声明一个用于筛选未加载类的委托
+        FOnPickUnloadedClass CustomUnloadedClassFilterFunction;
+
+        virtual bool IsClassAllowed(const FClassViewerInitializationOptions& InInitOptions, const UClass* InClass, TSharedRef<FClassViewerFilterFuncs> InFilterFuncs) override
+        {
+            // 修改点7：在 FPropertyEditorClassFilter 类的 IsClassAllowed 函数中，优先通过自定义委托来检查一个蓝图类是否不满足筛选条件
+            if (CustomLoadedClassFilterFunction.IsBound() && !CustomLoadedClassFilterFunction.Execute(InClass))
+            {
+                return false;
+            }
+
+            return IsClassAllowedHelper(InClass);
+        }
+
+        virtual bool IsUnloadedClassAllowed(const FClassViewerInitializationOptions& InInitOptions, const TSharedRef<const IUnloadedBlueprintData> InBlueprint, TSharedRef<FClassViewerFilterFuncs> InFilterFuncs) override
+        {
+            // 修改点8：在 FPropertyEditorClassFilter 类的 IsUnloadedClassAllowed 函数中，优先通过自定义委托来检查一个蓝图类是否不满足筛选条件
+            if (CustomUnloadedClassFilterFunction.IsBound() && !CustomUnloadedClassFilterFunction.Execute(InBlueprint))
+            {
+                return false;
+            }
+
+            return IsClassAllowedHelper(InBlueprint);
+        }
+        // ...
+    };
+    // ...
+    void SPropertyEditorClass::Construct(const FArguments& InArgs, const TSharedPtr<class FPropertyEditor>& InPropertyEditor)
+    {
+        PropertyEditor = InPropertyEditor;
+
+        if (PropertyEditor.IsValid())
+        {
+            // ...
+        }
+        else
+        {
+            // ...
+            // 修改点9：在 SPropertyEditorClass 类的 Construct 函数中，接收从外部传入的，用于筛选已加载类的委托
+            OnPickLoadedClass = InArgs._OnPickLoadedClass;
+            // 修改点10：在 SPropertyEditorClass 类的 Construct 函数中，接收从外部传入的，用于筛选未加载类的委托
+            OnPickUnloadedClass = InArgs._OnPickUnloadedClass;
+        }
+        // ...
+    }
+    // ...
+    void SPropertyEditorClass::CreateClassFilter()
+    {
+        // ...
+        // 修改点11：在 SPropertyEditorClass 类的 CreateClassFilter 函数中，将用于筛选已加载类的委托传递给 FPropertyEditorClassFilter 类对象
+        PropEdClassFilter->CustomLoadedClassFilterFunction = OnPickLoadedClass;
+        // 修改点12：在 SPropertyEditorClass 类的 CreateClassFilter 函数中，将用于筛选未加载类的委托传递给 FPropertyEditorClassFilter 类对象
+        PropEdClassFilter->CustomUnloadedClassFilterFunction = OnPickUnloadedClass;
+
+        ClassFilter = FModuleManager::LoadModuleChecked<FClassViewerModule>("ClassViewer").CreateClassFilter(ClassViewerOptions);
+        ClassFilterFuncs = FModuleManager::LoadModuleChecked<FClassViewerModule>("ClassViewer").CreateFilterFuncs();
+    }
+    ```
