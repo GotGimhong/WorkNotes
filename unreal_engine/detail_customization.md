@@ -3,7 +3,7 @@
 
 ## 概述
 
-在一个蓝图的细节面板（Details）中，会按照类别展示蓝图类包含的蓝图属性。这些蓝图属性的展示是可以定制的，它分为**蓝图类定制（Class Customization）**和**属性类型定制（Property Type Customization）**两种方式。
+在一个蓝图的细节面板（Details）中，会按照类别展示蓝图类包含的蓝图属性。这些蓝图属性的展示是可以定制的，它分为 **蓝图类定制（Class Customization）** 和 **属性类型定制（Property Type Customization）** 两种方式。
 
 
 ## 蓝图类定制
