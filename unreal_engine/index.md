@@ -34,6 +34,10 @@
 
     + [PAK](pak.md)
 
++ ini 系统
+
+    + [ConfigCacheIni](config_cache_ini.md)
+
 + 多线程
 
     + [多线程的定制](thread_runnable.md)
