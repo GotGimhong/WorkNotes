@@ -52,6 +52,12 @@
 
     + [iOS 打包](ios_packaging.md)
 
++ 屏幕适配
+
+    + [屏幕适配的引擎支持](screen_compatibility_engine.md)
+
+    + [屏幕适配的改进](screen_compatibility_advance.md)
+
 + 杂项
 
     + [iOS 平台开发问题排查记录](ios_development.md)
