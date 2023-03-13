@@ -138,7 +138,11 @@
 
 备注：
 
-+ 使用 VS2022 编译 UE5\.0 时，可能会遇到 MSB3073 错误，原因是 VS2022 默认安装的 MSVC 编译器版本过高；解决方法是安装一个低版本的 MSVC 编译器，在 BuildConfiguration\.xml 中进行指定，然后重新编译引擎
++ 如果使用 VS2022 运行 UE5\.0 的引擎或者游戏工程，还需要安装以下组件，否则在生成解决方案时就会出现错误
+
+    + \.NET Core 3\.1 Runtime (Out of support)
+
++ 使用 VS2022 编译 UE5\.0 时，可能会遇到 MSB3073 错误，或者提示 UBT 错误 'Unhandled exception: Dependency file "xxx" version ("1\.2") is not supported version'；原因是 VS2022 默认安装的 MSVC 编译器版本过高；解决方法是安装一个低版本的 MSVC 编译器，在 BuildConfiguration\.xml 中进行指定，然后重新编译引擎
 
     可以选用以下版本的 MSVC 编译器：
 
@@ -153,8 +157,13 @@
     ```xml
     <?xml version="1.0" encoding="utf-8" ?>
     <Configuration xmlns="https://www.unrealengine.com/BuildConfiguration">
-        <Compiler>VisualStudio2022</Compiler>
-        <CompilerVersion>14.30.30705</CompilerVersion>
+        <ProjectFileGenerator>
+            <Format>VisualStudio2022</Format>
+        </ProjectFileGenerator>
+        <WindowsPlatform>
+            <Compiler>VisualStudio2022</Compiler>
+            <CompilerVersion>14.30.30705</CompilerVersion>
+        </WindowsPlatform>
     </Configuration>
     ```
 
@@ -179,5 +188,7 @@ VS2019 能够支持低版本的 \.NET SDK 6\.0，高版本和预览版本则不�
 + [当前的 .NET SDK 不支持 .NET 6.0 的解决方法](https://stackoverflow.com/questions/72365082/the-current-net-sdk-does-not-support-targeting-net-6-0-either-target-net-5-0)
 
 + [UE5编译报错：Error MSB3073](https://zhuanlan.zhihu.com/p/562697309)
+
++ [Fatal compilation bug fix: support VS2022 *.gen.json version 1.2](https://github.com/EpicGames/UnrealEngine/pull/9067)
 
 + [Download .NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
