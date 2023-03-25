@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>GotGimhong 的工作笔记</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <link rel="stylesheet" href="//vox.cab/npm/docsify-sidebar-collapse/dist/sidebar.min.css">
+  <link rel="stylesheet" href="//unpkg.com/mermaid/dist/mermaid.min.css">
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      name: "GotGimhong 的工作笔记",
+      nameLink: "https://github.com/GotGimhong/WorkNotes",
+      repo: "",
+      maxLevel: 6,
+      subMaxLevel: 3,
+      homepage: "_index.md",
+      coverpage: true,
+      loadNavbar: true,
+      loadSidebar: true,
+      search: {
+        paths: "auto",
+        placeholder: "请输入搜索内容",
+        noData: "搜索结果为空",
+        depth: 6
+      },
+      count: {
+        countable: true,
+        fontsize: "0.9em",
+        color: "rbg(90,90,90)",
+        language: "chinese"
+      },
+      pagination: {
+        previousText: "上一篇文章",
+        nextText: "下一篇文章",
+        crossChapter: true,
+        crossChapterText: true
+      },
+      // // 自定义插件
+      // plugins: [
+      //   // mermaid
+      //   function(hook, vm) {
+      //     hook.ready(function() {
+      //       mermaid.initialize({ startOnLoad: false });
+      //     });
+      //     hook.doneEach(function() {
+      //       mermaid.init(undefined, ".mermaid");
+      //     });
+      //   }
+      // ],
+      // // markdown 内嵌代码解析
+      // markdown: {
+      //   renderer: {
+      //     code: function(code, lang) {
+      //       var html = "";
+      //       // 通过关键字 'sequenceDiagram'，'graph' 和 'gantt' 搜索 mermaid 代码片段
+      //       // 生成一个格式为 <div class="mermaid">{代码}</div> 的 xml 块
+      //       if (code.match(/^sequenceDiagram/) || code.match(/^graph/) || code.match(/^gantt/)) {
+      //         html = "<div class=\"mermaid\">" + code + "</div>";
+      //       }
+      //       // 添加高亮
+      //       var highlight = Prism.highlight(code, Prism.languages[lang] || Prism.languages.markup);
+      //       return html + "<pre v-pre data-lang=\"" + lang + "\"><code class=\"lang-" + lang + "\">" + highlight + "</code></pre>";
+      //     }
+      //   }
+      // }
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <!-- C 代码高亮 -->
+  <script src="//unpkg.com/prismjs/components/prism-c.js"></script>
+  <!-- C++ 代码高亮 -->
+  <script src="//unpkg.com/prismjs/components/prism-cpp.js"></script>
+  <!-- 复制代码到剪贴板 -->
+  <script src="//unpkg.com/docsify-copy-code"></script>
+  <!-- 图片缩放 -->
+  <script src="//unpkg.com/docsify/lib/plugins/zoom-image.js"></script>
+  <!-- 字数统计 -->
+  <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+  <!-- 页脚信息 -->
+  <script src="//vox.cab/npm/@alertbox/docsify-footer/dist/docsify-footer.min.js"></script>
+  <!-- 分页导航 -->
+  <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <!-- 文本高亮 -->
+  <script src="//unpkg.com/docsify-plugin-flexible-alerts"></script>
+  <!-- 全文搜索 -->
+  <script src="https://cdn.bootcss.com/docsify/4.5.9/plugins/search.min.js"></script>
+  <!-- 支持 mermaid -->
+  <script type="text/javascript" src="//unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</body>
+</html>

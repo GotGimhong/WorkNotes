@@ -3,7 +3,7 @@
 
 ## 主要思路
 
-主要思路是针对 [引擎原生支持](screen_compatibility_engine.md) 的两点问题进行改进：
+主要思路是针对 [引擎原生支持](unreal_engine/screen_compatibility_engine.md) 的两点问题进行改进：
 
 + 对于 Android 平台支持程度有限的问题
 

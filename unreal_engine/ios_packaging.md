@@ -41,7 +41,7 @@ LogShaderCompilers: Error: Errors compiling global shader TSlateElementPSLineSeg
 LogShaderCompilers: Error:  /tmp/3135_593812915.metal(0): Xcode's metal shader compiler was not found, verify Xcode has been installed on this Mac and that it has been selected in Xocde > Preferences > Locations > Command-line Tools.
 ```
 
-该报错属于 Metal 材质编译报错，如果忽略则会导致游戏启动崩溃。原因同 [编译引擎时出现 ShaderCompileWorker 编译失败的问题](mac_engine.md#编译引擎时出现-shadercompileworker-编译失败的问题) 。
+该报错属于 Metal 材质编译报错，如果忽略则会导致游戏启动崩溃。原因同 [编译引擎时出现 ShaderCompileWorker 编译失败的问题](unreal_engine/mac_engine.md#编译引擎时出现-shadercompileworker-编译失败的问题) 。
 
 ### 使用 dis 证书打包 iOS 失败
 

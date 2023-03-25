@@ -5,7 +5,7 @@
 
 引擎的 Core 模块提供了定制多线程的支持，让开发者能够实现更加灵活的线程行为。关键的类型有 `FRunnable`，`FSingleThreadRunnable` 和 `FRunnableThread`。
 
-`FRunnable` 和 `FSingleThreadRunnable` 是线程执行主体的基类，它们是可以被线程管理和调度的单位；每个线程执行主体都会运行在一个线程的上下文中。前者用于实现真正意义上的多线程（针对当前平台支持多线程的情况），后者用于模拟多线程（针对当前平台不支持多线程的情况）。判断当前平台是否支持多线程的方法，请见 [多线程的支持](thread_summary.md#多线程的支持) 。
+`FRunnable` 和 `FSingleThreadRunnable` 是线程执行主体的基类，它们是可以被线程管理和调度的单位；每个线程执行主体都会运行在一个线程的上下文中。前者用于实现真正意义上的多线程（针对当前平台支持多线程的情况），后者用于模拟多线程（针对当前平台不支持多线程的情况）。判断当前平台是否支持多线程的方法，请见 [多线程的支持](unreal_engine/thread_summary.md#多线程的支持) 。
 
 `FRunnableThread` 是线程的基类。引擎根据不同的平台实现了几种派生类，例如 Unix 平台的 `FRunnableThreadUnix` 类，Apple 平台的 `FRunnableThreadApple` 类和 Android 平台的 `FRunnableThreadAndroid` 类。此外，引擎提供了 `FFakeThread` 类，当平台不支持多线程功能时，用于模拟线程。无论使用哪种线程类型，在代码中统一以基类指针 `FRunnableThread*` 的形式进行管理。
 
@@ -354,7 +354,7 @@ RunnableA->Thread = FRunnableThread::Create(RunnableA, TEXT("MyRunnableA"));
 
 ## 完整示例
 
-线程执行主体类的完整示例请见 [MyRunnable.h](thread_runnable/MyRunnable.h) 和 [MyRunnable.cpp](thread_runnable/MyRunnable.cpp) 。
+线程执行主体类的完整示例请见 [MyRunnable.h](unreal_engine/thread_runnable/MyRunnable.h) 和 [MyRunnable.cpp](unreal_engine/thread_runnable/MyRunnable.cpp) 。
 
 
 ## 参考资料

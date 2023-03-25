@@ -25,7 +25,7 @@
 
     对象标签（Flags）的掩码
 
-    每个对象都会携带一系列类型为 `EInternalObjectFlags` 的标签，每个标签表示一种对象的状态，通过位运算可以将标签组成掩码。与 `FObjectItem` 直接相关的枚举值有 `Unreachable`，`PendingKill` 和 `RootSet`，具体说明请见 [对象的生命周期](object_lifecycle.md)
+    每个对象都会携带一系列类型为 `EInternalObjectFlags` 的标签，每个标签表示一种对象的状态，通过位运算可以将标签组成掩码。与 `FObjectItem` 直接相关的枚举值有 `Unreachable`，`PendingKill` 和 `RootSet`，具体说明请见 [对象的生命周期](unreal_engine/object_lifecycle.md)
 
 + `ClusterRootIndex`
 
