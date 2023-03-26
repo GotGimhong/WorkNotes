@@ -2,6 +2,8 @@
 
 欢迎通过 Issues 和 Discussions 与我交流或者提出指正～
 
+请访问 [网页文档](https://gotgimhong.github.io/WorkNotes/) 以获得更好的阅读体验～
+
 ---
 
 ## 目录
