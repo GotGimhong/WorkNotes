@@ -42,6 +42,11 @@
         nextText: "下一篇笔记",
         crossChapter: true,
         crossChapterText: true
+      },
+      timeUpdater: {
+        text: "*笔记最后更新于 {docsify-updated}*",
+        formatUpdated: "{YYYY}/{MM}/{DD}",
+        whereToPlace: "top"
       }
     }
   </script>
@@ -81,5 +86,14 @@
   <script src="//unpkg.com/docsify-plugin-flexible-alerts"></script>
   <!-- 全文搜索 -->
   <script src="https://cdn.bootcss.com/docsify/4.5.9/plugins/search.min.js"></script>
+  <!-- 文档修改日期的显示 -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-updated/src/time-updater.js"></script>
+  <!-- Mermaid 图标支持 -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true });
+    window.mermaid = mermaid;
+  </script>
+  <script src="//unpkg.com/docsify-mermaid@2.0.0/dist/docsify-mermaid.js"></script>
 </body>
 </html>
