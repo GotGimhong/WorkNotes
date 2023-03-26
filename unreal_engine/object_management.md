@@ -129,7 +129,7 @@ class FChunkedFixedUObjectArray
 因此，对于 `FChunkedFixedUObjectArray`，分页的数目是 `MaxElements` / 65536 + 1，每个分页内最多有 65536 个对象，形成如下图所示的结构：
 
 ```mermaid
-graph LR
+graph TD
 Chunk_0("分页0: Objects[0]")
     Item_00("对象0: Objects[0][0]")
     Item_01("对象1: Objects[0][1]")
@@ -167,7 +167,7 @@ Chunk_2 ---> Chunk_K
 在启用预分配功能时，`PreAllocatedObjects` 就会发挥作用，作为 `Objects` 的一个镜像，形成如下图所示的结构：
 
 ```mermaid
-graph LR
+graph TD
 Chunk_0("分页0: Objects[0]")
     Item_00("对象0: PreAllocatedObjects[0]")
     Item_01("对象1: PreAllocatedObjects[1]")
