@@ -28,7 +28,7 @@
 
     理论上适用于常规功能的开发，示例代码如下：
 
-    ```c++
+    ```cpp
     if (FAssetRegistryModule* Module = FModuleManager::LoadModulePtr<FAssetRegistryModule>(TEXT("AssetRegistry")))
     {
         // 引用方式，通常使用 EDependencyCategory::Package

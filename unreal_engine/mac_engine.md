@@ -5,7 +5,7 @@
 
 1. 先赋予 `GenerateProjectFiles.command`，`RunMono.sh`，`XcodeBuild.sh` 和 `ispc` **执行权限**，在引擎根目录下执行以下命令：
 
-```shell
+```powershell
 $ chmod +x GenerateProjectFiles.command
 $ chmod +x Engine/Build/BatchFiles/Mac/RunMono.sh
 $ chmod +x Engine/Build/BatchFiles/Mac/XcodeBuild.sh
@@ -64,7 +64,7 @@ ERROR: Remote compiling requires a server name. Use the editor (Project Settings
 
 需要配置远程 Mac 打包机 IP 与帐号。在 Engine/Config/BaseEngine.ini 中添加以下配置：
 
-```
+```ini
 [/Script/IOSRuntimeSettings.IOSRuntimeSettings]
 RemoteServerName="172.16.10.144"
 RSyncUserName="4399"
@@ -80,7 +80,7 @@ ERROR: Unable to find mobile provision for UE4Game.
 
 在构建过程中会将引擎打包为 iOS 平台，也就是 UE4Game for iOS，因此同样需要条款（Provision）文件。在 Engine/Config/BaseEngine.ini 中添加以下配置：
 
-```
+```ini
 [/Script/IOSRuntimeSettings.IOSRuntimeSettings]
 MobileProvision={.mobileprovision 文件的路径}
 ```
@@ -95,7 +95,7 @@ Code Signing Error: Provision profile "xxx" has app ID "xxx", which does not mat
 
 在 Engine/Config/BaseEngine.ini 中添加以下配置：
 
-```
+```ini
 [/Script/IOSRuntimeSettings.IOSRuntimeSettings]
 BundleIdentifier=com.ssjjsyinner.[PROJECT_NAME]
 ```

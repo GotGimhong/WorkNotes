@@ -32,7 +32,7 @@ Blueprint --- BPInterfaceDescription
 
 ![](blueprint_interface/introduction_description.png)
 
-```c++
+```cpp
 // 蓝图接口描述子，请见源码 Blueprint.h
 USTURCT()
 struct FBPInterfaceDescription
@@ -57,7 +57,7 @@ struct FBPInterfaceDescription
 
 ![](blueprint_interface/introduction_graph.png)
 
-```c++
+```cpp
 // 图，请见源码 EdGraph.h
 UCLASS()
 class ENGINE_API UEdGraph: public UObject
@@ -81,7 +81,7 @@ public:
 
 ![](blueprint_interface/introduction_graph_node.png)
 
-```c++
+```cpp
 // 图节点，请见源码 EdGraphNode.h
 UCLASS()
 class ENGINE_API UEdGraphNode : public UObject
@@ -104,7 +104,7 @@ public:
 
 ![](blueprint_interface/introduction_graph_pin.png)
 
-```c++
+```cpp
 // 图引脚，请见源码 EdGraphPin.h
 class UEdGraphPin
 {
@@ -144,7 +144,7 @@ public:
 
 1. 检查蓝图接口的有效性
 
-    ```c++
+    ```cpp
     // 蓝图接口的名称
     FName InterfaceName;
     UObject* Interface = StaticFindObject(UClass::StaticClass(), ANY_PACKAGE, *InterfaceName.ToString());
@@ -156,7 +156,7 @@ public:
 
     这一步的目的是提高代码的健壮性。因为接下来需要调用 `FBlueprintEditorUtils` 的成员函数 `ImplementNewInterface` 来实现蓝图接口，在 `ImplementNewInterface` 当中使用了断言检查蓝图接口的有效性，所以如果蓝图接口无效，调用 `ImplementNewInterface` 就会触发断点错误。
 
-    ```c++
+    ```cpp
     // 请见源码 BlueprintEditorUtils.cpp
     bool FBlueprintEditorUtils::ImplementNewInterface(UBlueprint* Blueprint, const FName& InterfaceClassName)
     {
@@ -169,7 +169,7 @@ public:
 
 2. 实现蓝图接口
 
-    ```c++
+    ```cpp
     // 纯蓝图类对应的蓝图
     UBlueprint* Blueprint;
     FName InterfaceName;
@@ -191,7 +191,7 @@ public:
 
     ![](blueprint_interface/implementation_find_interface.png)
 
-    ```c++
+    ```cpp
     UBlueprint* Blueprint;
     for (FBPInterfaceDescription Interface : Blueprint->ImplementedInterfaces)
     {
@@ -208,7 +208,7 @@ public:
 
     ![](blueprint_interface/implementation_find_graph.png)
 
-    ```c++
+    ```cpp
     FBPInterfaceDescription Interface;
     for (UEdGraph* Graph : Interface.Graphs)
     {
@@ -223,7 +223,7 @@ public:
 
     遍历蓝图接口中的图，按名称检索是最严谨的做法，但是效率较低。如果对蓝图接口的定义十分明确，就可以采用下标访问的方式，以提高效率。
 
-    ```c++
+    ```cpp
     if (Interfaces.Graphs.Num() == 1)
     {
         // UnLuaInterface 有且只有一个成员函数 GetModuleName
@@ -236,7 +236,7 @@ public:
 
     ![](blueprint_interface/implementation_find_graph_node.png)
 
-    ```c++
+    ```cpp
     UEdGraph* Graph;
     for (UEdGraphNode* Node : Graph->Nodes)
     {
@@ -254,7 +254,7 @@ public:
 
     类似第2步，遍历图中的图节点，按名称检索是最严谨的做法，但是效率较低。因此可以尝试采用下标访问的方式，以提高效率。
 
-    ```c++
+    ```cpp
     if (Graph->Nodes.Num() == 2)
     {
         // GetModuleName 的图有且只有两个图节点，其中第0个图节点表示起始，第1个图节点表示结束（返回值所在的图节点）
@@ -267,7 +267,7 @@ public:
 
     ![](blueprint_interface/implementation_find_graph_pin.png)
 
-    ```c++
+    ```cpp
     for (UEdGraphPin* Pin : Node->Pins)
     {
         // 作为返回值的图引脚，名称统一是“ReturnValue”
@@ -280,7 +280,7 @@ public:
 
     类似第2步，遍历图节点中的图引脚，按名称检索是最严谨的做法，但是效率较低。因此可以采用下标访问的方式，以提高效率。
 
-    ```c++
+    ```cpp
     if (Node->Pins.Num() == 2)
     {
         // GetModuleName 中表示结束的图节点，有且只有两个图引脚，其中第0个表示图节点的起始（execute），第1个表示返回值
@@ -292,7 +292,7 @@ public:
 
     ![](blueprint_interface/implementation_set_graph_pin_value.png)
 
-    ```c++
+    ```cpp
     // 将 GetModuleName 的返回值修改为“GameLogic.Module.My.MyView”
     Pin->DefaultValue = FString(TEXT("GameLogic.Module.My.MyView"));
     ```

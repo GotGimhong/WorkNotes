@@ -11,7 +11,7 @@
 
 + `Object`
 
-    ```c++
+    ```cpp
     UObjectBase* Object;
     ```
 
@@ -19,7 +19,7 @@
 
 + `Flags`
 
-    ```c++
+    ```cpp
     int32 Flags;
     ```
 
@@ -29,7 +29,7 @@
 
 + `ClusterRootIndex`
 
-    ```c++
+    ```cpp
     int32 ClusterRootIndex
     ```
 
@@ -39,7 +39,7 @@
 
 + `SerialNumber`
 
-    ```c++
+    ```cpp
     int32 SerialNumber;
     ```
 
@@ -58,7 +58,7 @@
 
 + `Objects`
 
-    ```c++
+    ```cpp
     FUObjectItem** Objects;
     ```
 
@@ -68,7 +68,7 @@
 
 + `PreAllocatedObjects`
 
-    ```c++
+    ```cpp
     FUObjectItem* PreAllocatedObjects;
     ```
 
@@ -78,7 +78,7 @@
 
 + `MaxElements`
 
-    ```c++
+    ```cpp
     int32 MaxElements;
     ```
 
@@ -86,7 +86,7 @@
 
 + `NumElements`
 
-    ```c++
+    ```cpp
     int32 NumElements;
     ```
 
@@ -94,7 +94,7 @@
 
 + `MaxChunks`
 
-    ```c++
+    ```cpp
     int32 MaxChunks;
     ```
 
@@ -102,7 +102,7 @@
 
 + `NumChunks`
 
-    ```c++
+    ```cpp
     int32 NumChunks;
     ```
 
@@ -112,7 +112,7 @@
 
 在 `FChunkedFixedUObjectArray` 类当中，定义了每个分页内对象数目的上限，这个值是 65536。
 
-```c++
+```cpp
 /** UObjectArray.h */
 
 class FChunkedFixedUObjectArray
@@ -208,7 +208,7 @@ Chunk_2 ---> Chunk_K
 
 在编写业务代码时，可以通过全局变量 `GUObjectArray` 访问对象。
 
-```c++
+```cpp
 /** 声明处：UObjectArray.h */
 extern COREUOBJECT_API FUObjectArray GUObjectArray;
 
@@ -220,7 +220,7 @@ FUObjectArray GUObjectArray;
 
 + `ObjObjects`
 
-    ```c++
+    ```cpp
     typedef FChunkedFixedUObjectArray TUObjectArray;
     TUObjectArray ObjObjects;
     ```
@@ -229,7 +229,7 @@ FUObjectArray GUObjectArray;
 
 + `ObjAvailableList`
 
-    ```c++
+    ```cpp
     TLockFreePointerListUnordered<int32, PLATFORM_CACHE_LINE_SIZE> ObjAvailableList;
     ```
 
@@ -241,7 +241,7 @@ FUObjectArray GUObjectArray;
 
 + `ObjAvailableCount`
 
-    ```c++
+    ```cpp
     FThreadSafeCounter ObjAvailableCount;
     ```
 
@@ -251,7 +251,7 @@ FUObjectArray GUObjectArray;
 
 + `ObjFirstGCIndex`
 
-    ```c++
+    ```cpp
     int32 ObjFirstGCIndex;
     ```
 
@@ -261,7 +261,7 @@ FUObjectArray GUObjectArray;
 
 + `ObjLastNonGCIndex`
 
-    ```c++
+    ```cpp
     int32 ObjLastNonGCIndex;
     ```
 
@@ -271,7 +271,7 @@ FUObjectArray GUObjectArray;
 
 + `MaxObjectsNotConsideredByGC`
 
-    ```c++
+    ```cpp
     int32 MaxObjectsNotConsideredByGC;
     ```
 
@@ -279,7 +279,7 @@ FUObjectArray GUObjectArray;
 
 + `OpenForDisregardForGC`
 
-    ```c++
+    ```cpp
     bool OpenForDisregardForGC;
     ```
 
@@ -291,7 +291,7 @@ FUObjectArray GUObjectArray;
 
 通过 `FUObjectArray` 类的成员函数 `ObjectToIndex` 和 `IndexToObject`，可以实现索引和对象的互相访问。
 
-```c++
+```cpp
 /** UObjectArray.h */
 
 class COREUOBJECT_API FUObjectArray
@@ -309,7 +309,7 @@ class COREUOBJECT_API FUObjectArray
 
 对象在创建之后，需要添加到容器内进行管理，引擎通过 `FUObjectArray` 类的成员函数 `AllocateUObjectIndex` 为它分配一个未被使用的索引。分配索引时，优先复用 `ObjAvailableList` 中的索引，其次将对象添加至容器末尾（相当于分配一个新的索引）。当对象销毁时，需要从容器内移除，引擎通过 `FUObjectArray` 类的成员函数 `FreeUObjectIndex` 将对象的索引回收至 `ObjAvailableList` 当中，留待下一次创建对象时使用。
 
-```c++
+```cpp
 /** UObjectArray.h */
 
 class COREUOBJECT_API FUObjectArray
@@ -330,7 +330,7 @@ class COREUOBJECT_API FUObjectArray
 
 根据 `AllocateUObjectIndex` 和 `FreeUObjectIndex` 的实现可以知道，对象的创建和销毁都应该确保在**主线程**中进行。
 
-```c++
+```cpp
 /** UObjectArray.cpp */
 
 void FUObjectArray::AllocateUObjectIndex(UObjectBase* Object, bool bMergingThreads = false)
@@ -377,7 +377,7 @@ void FUObjectArray::FreeUObjectIndex(UObjectBase* Object)
 
 常驻对象机制的启用和关闭，可以通过 `FUObjectArray` 类的成员函数 `OpenDisregardForGC` 和 `CloseDisregardForGC` 来完成；当 `FUObjectArray` 类成员函数 `IsOpenForDisregardForGC` 和 `DisregardForGCEnabled` 的返回值同时为 `true` 时，常驻对象的机制才能生效。引擎默认不启用常驻对象的机制。
 
-```c++
+```cpp
 /** UObjectArray.h */
 
 class COREUOBJECT_API FUObjectArray

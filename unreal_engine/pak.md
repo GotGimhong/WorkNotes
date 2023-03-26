@@ -30,11 +30,13 @@ PAK 文件信息区域的结构如下图所示：
 
 以下是关于这个问题和官方的沟通记录：
 
-> Wang Mi (Epic Games)：考虑到压缩，签名，IOStore 的容器文件排序和抽取等复杂度，Pak 没有直接往 Pak 容器内直接新增和修改文件的接口。
+> 答：考虑到压缩，签名，IOStore 的容器文件排序和抽取等复杂度，Pak 没有直接往 Pak 容器内直接新增和修改文件的接口。
 >
-> Q：我们想了解一下原因，是不是因为 Pak 文件在设计上存在限制，而不支持这样的操作呢？可能的话，我们想尝试自己增加这些接口。
-> Wang Mi (Epic Games)：我并不清楚，我倾向于理解成，引擎之前在这几这个系统的时候没有类似的需求。是不是能支持我不清楚，单纯看 FPakFile 的结构恐怕并不是很容易处理。
-> Wang Mi (Epic Games)：其实本身要改写的内容只有修正所有索引的偏移，以及修正索引中修改文件的偏移和大小，以及修改文件实际偏移位置的数据。​但是如果要替换其中特定文件，那么，大概率原始文件区的大小是要发生变化的，于是，就不得不把后面所有的内容都做修正了。​
+> 问：我们想了解一下原因，是不是因为 Pak 文件在设计上存在限制，而不支持这样的操作呢？可能的话，我们想尝试自己增加这些接口。
+>
+> 答：我并不清楚，我倾向于理解成，引擎之前在这几这个系统的时候没有类似的需求。是不是能支持我不清楚，单纯看 FPakFile 的结构恐怕并不是很容易处理。
+>
+> 答：其实本身要改写的内容只有修正所有索引的偏移，以及修正索引中修改文件的偏移和大小，以及修改文件实际偏移位置的数据。​但是如果要替换其中特定文件，那么，大概率原始文件区的大小是要发生变化的，于是，就不得不把后面所有的内容都做修正了。​
 
 PAK 文件的增量更新与 PAK 文件的结构直接相关，请见 [PAK 文件的结构](#pak-文件的结构)。
 
@@ -104,7 +106,7 @@ Mount Point 是引擎装载 PAK 文件的起始目录。在打包后的游戏当
 
 `ExecuteUnrealPak` 函数的声明和定义请见引擎源码 PakFileUtilities\.h 和 PakFileUtilities\.cpp，使用示例如下：
 
-```c++
+```cpp
 /**
  * 需要在模块的 Build.cs 文件当中，添加 PakFileUtilities 模块的依赖
  * 需要包含头文件 PakFileUtilities.h
@@ -155,7 +157,7 @@ bool bSuccessful = ExecuteUnrealPak(TEXT("-Create=D:/MyProject/Response.txt D:/M
 ​
 ​问题出现在第二种方式。`LoadKeyChain` 函数内部会尝试加载 Engine，Crypto 和 Encryption 三个 ini 文件，在向 `FConfigCacheIni::LoadExternalIniFile` 函数传递 EngineConfigDir 参数的时候，以 "Config\\\\" 来结尾。
 
-```c++
+```cpp
 // PakFileUtilities.cpp
 
 void LoadKeyChain(const TCHAR* CmdLine, FKeyChain& OutCryptoSettings)
@@ -172,7 +174,7 @@ void LoadKeyChain(const TCHAR* CmdLine, FKeyChain& OutCryptoSettings)
 
 在 4\.26 和 4\.27 版本中，`FConfigCacheIni::LoadExternalIniFile` 函数最终会调用到 `FConfigFile::AddStaticLayersToHierarchy` 函数。然而，在 `FConfigFile::AddStaticLayersToHierarchy` 函数当中，会断言 EngineConfigDir 参数以 "Config/" 结尾。
 
-```c++
+```cpp
 // ConfigCacheIni.cpp
 
 void FConfigFile::AddStaticLayersToHierarchy(const TCHAR* InBaseIniName, const TCHAR* InPlatformName, const TCHAR* EngineConfigDir, const TCHAR* SourceConfigDir)
@@ -189,7 +191,7 @@ void FConfigFile::AddStaticLayersToHierarchy(const TCHAR* InBaseIniName, const T
 
 而在 5\.0 到 5\.2 版本中，`FConfigCacheIni::LoadExternalIniFile` 函数最终会调用到 `FConfigContext::CachePaths` 函数。虽然具体实现有所变化，但是仍然存在相同的断言。
 
-```c++
+```cpp
 // ConfigContext.cpp
 
 void FConfigContext::CachePaths()

@@ -11,7 +11,7 @@
 
     从 UE5\.0 开始被 `MarkAsGarbage` 函数所替代。
 
-    ```c++
+    ```cpp
     UObject* const Object;
     #if ENGINE_MAJOR_VERSION >= 5
         Object->MarkAsGarbage();
@@ -24,7 +24,7 @@
 
     从 UE5\.0 被 `ClearGarbage` 函数所替代。
 
-    ```c++
+    ```cpp
     UObject* const Object;
     #if ENGINE_MAJOR_VERSION >= 5
         Object->ClearGarbage();
@@ -39,7 +39,7 @@
 
     根据引擎的注释，除了以上两个函数外，还可以使用全局函数 `IsValidChecked`，功能类似于 `IsValid`。然而我们并不建议使用该函数，因为该函数内部存在断言，如果待检查的对象为空就会导致断言失败，从而引起崩溃。
 
-    ```c++
+    ```cpp
     UObject* const Object;
     #if ENGINE_MAJOR_VERSION >= 5
         // 或通过 GetValid(Object) 进行检查，Object 有效时返回 Object，反之返回空指针
@@ -60,7 +60,7 @@
 
     被移至 `UUnrealEditorSubsystem` 类中，请见 UnrealEditorSubsystem\.h。
 
-    ```c++
+    ```cpp
     // 以 GetEditorWorld 和 GetGameWorld 为例
 
     #if ENGINE_MAJOR_VERSION >= 5
@@ -92,7 +92,7 @@
 
     `FVersionedNiagaraEmitterData` 的声明请见 NiagaraEmitter\.h，`FNiagaraEmitterInstance` 的声明请见 NiagaraEmitterInstance\.h。
 
-    ```c++
+    ```cpp
     const TSharedRef<FNiagaraEmitterInstance> Instance;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         if (FVersionedNiagaraEmitterData* const EmitterData = Instance->GetCachedEmitterData())
@@ -128,7 +128,7 @@
 
     在派生类 `USkeletalMeshComponent` 中，`SetSkeletalMesh` 仍然可用，但是不再作为蓝图函数。
 
-    ```c++
+    ```cpp
     USkinnedMeshComponent* const SkinnedMeshComponent;
     USkeletalMeshComponent* const SkeletalMeshComponent;
     USkeletalMesh* const SkeletalMesh;
@@ -158,7 +158,7 @@
 
     从 UE5\.0 开始，参数类型发生变化。
 
-    ```c++
+    ```cpp
     #if ENGINE_MAJOR_VERSION >= 5
         virtual void PreSave(const class ITargetPlatform* TargetPlatform);
     #else
@@ -175,7 +175,7 @@
 
     从 UE5\.1 开始，参数列表发生变化，相比旧版本多了一步合并子控件的操作。
 
-    ```c++
+    ```cpp
     UUserWidget* const UserWidget;
     UWidgetTree* const WidgetTree;
     // 需要额外合并的子控件，如果没有留空即可
@@ -196,7 +196,7 @@
 
     从 UE5\.1 开始被 `GetRowStructPathName` 函数所替代。
 
-    ```c++
+    ```cpp
     UDataTable* const DataTable;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         const FString& PathName = DataTable->GetRowStructPathName().ToString();
@@ -214,7 +214,7 @@
 
     从 UE5\.1 开始被 `Conv_DoubleToText` 函数所替代，后者是从 UE5\.0 开始新增的函数。
 
-    ```c++
+    ```cpp
     #if ENGINE_MAJOR_VERSION >= 5
         // 接收双精度浮点数
         const FText& Text = UKismetTextLibrary::Conv_DoubleToText(100.0, ERoundingMode::HalfToEven);
@@ -233,7 +233,7 @@
 
     从 UE5\.1 开始，该函数的命名被更正为 `InvalidateTextureSource`。
 
-    ```c++
+    ```cpp
     UTexture2DArray* const Array;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         Array->InvalidateTextureSource();
@@ -251,7 +251,7 @@
 
     从 UE5\.1 开始，这些属性被对应的 Get 函数所替代。例如 `Expressions` 属性改为通过 `GetExpressions` 函数来访问。
 
-    ```c++
+    ```cpp
     // 以 Expressions 属性为例
 
     UMaterial* const Material;
@@ -268,7 +268,7 @@
 
     从 UE5\.1 开始，这些属性被迁移至 `UMaterialEditorOnlyData` 结构体中。后者是 UE5\.1 新增的类型，在 `UMaterial` 中可以通过 `GetEditorOnlyData` 函数来访问。
 
-    ```c++
+    ```cpp
     // 以 ParameterGroupData 属性为例
 
     UMaterial* const Material;
@@ -304,7 +304,7 @@
 
     从 UE5\.1 开始不再支持直接访问，被 `GetFont` 和 `SetFont` 函数所替代。
 
-    ```c++
+    ```cpp
     UTextBlock* const TextBlock;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         const FSlateFontInfo& Font = TextBlock->GetFont();
@@ -324,7 +324,7 @@
 
     从 UE5\.0 开始被 `GetLoadedPath` 函数所替代。
 
-    ```c++
+    ```cpp
     UPackage* const Package;
     #if ENGINE_MAJOR_VERSION >= 5
         const FName& FileName = Package->FileName;
@@ -337,7 +337,7 @@
 
     从 UE5\.0 开始增加了含有 `FSavePackageArgs` 类型参数的重载，并要求改用这个重载。`FSavePackageArgs` 的声明请见 SavePackage\.h。
 
-    ```c++
+    ```cpp
     UPackage* const Package;
     UObject* const ObjectToSave;
     const TCHAR* const FileName;
@@ -368,7 +368,7 @@
 
     从 UE5\.1 开始不再支持直接访问，被 `GetHintText` 和 `SetHintText` 函数所替代。
 
-    ```c++
+    ```cpp
     UEditableText* const EditableText;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         const FText& HintText = EditableText->GetHintText();
@@ -388,7 +388,7 @@
 
     从 UE5\.1 开始被移除，引擎没有指明替代的属性或函数。
 
-    ```c++
+    ```cpp
     // 只能在 UE5.0 或以下的版本中访问该属性
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 1 || ENGINE_MAJOR_VERSION < 5
         UTexture* const Texture;
@@ -405,7 +405,7 @@
 
     从 UE5\.1 开始，`Ability` 的类型从 `UGameplayAbility*` 变为 `TObjectPtr<UGameplayAbility>`。
 
-    ```c++
+    ```cpp
     UAbilityTask* const AbilityTask;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         UGameplayAbility* const Ability = AbilityTask->Ability.Get();
@@ -418,7 +418,7 @@
 
     从 UE5\.1 开始，`AbilitySystemComponent` 的类型从 `UAbilitySystemComponent*` 变为 `TWeakObjectPtr<UAbilitySystemComponent>`。
 
-    ```c++
+    ```cpp
     UAbilityTask* const AbilityTask;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         UAbilitySystemComponent* const ASC = AbilityTask->AbilitySystemComponent.Get();
@@ -436,7 +436,7 @@
 
     从 UE5\.1 开始被废弃，其功能被整合在 `WidgetStyle` 属性中。
 
-    ```c++
+    ```cpp
     UMultiLineEditableTextBox* const TextBox;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         const FTextBlockStyle& TextStyle = TextBox->WidgetStyle.TextStyle;
@@ -456,7 +456,7 @@
 
     从 UE5\.2 开始被废弃。其功能被整合在 `Style` 属性中。
 
-    ```c++
+    ```cpp
     const TSharedRef<SMultiLineEditableTextBox> TextBox;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         const FTextBlockStyle& TextStyle = TextBox->Style.TextStyle;
@@ -476,7 +476,7 @@
 
     从 UE5\.0 开始不再支持直接访问，被 `SetZOrder` 和 `GetZOrder` 函数所替代。
 
-    ```c++
+    ```cpp
     const TSharedRef<SOverlay> Overlay;
     #if ENGINE_MAJOR_VERSION >= 5
         // Get
@@ -500,7 +500,7 @@
 
     从 UE5\.1 开始，参数类型发生变化。
 
-    ```c++
+    ```cpp
     const FString ObjectPath;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         const FAssetData& AssetData = IAssetRegistry::Get()->GetAssetByObjectPath(FSoftObjectPath(ObjectPath));
@@ -518,7 +518,7 @@
 
     从 UE5\.1 开始被 `GetClassPathName` 函数所替代。
 
-    ```c++
+    ```cpp
     const TSharedRef<IUnloadedBlueprintData> BlueprintData;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         // 从 UE5.1 开始，引擎要求避免使用 FName 作为路径变量的类型
@@ -537,7 +537,7 @@
 
     从 UE5\.1 开始，参数列表发生变化。`InStructPath` 参数的类型从 `FName` 变为 `const FSoftObjectPath&`。
 
-    ```c++
+    ```cpp
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         virtual bool IsUnloadedStructAllowed(const FStructViewerInitializationOptions& InInitOptions, const FSoftObjectPath& InStructPath, TSharedRef<class FStructViewerFilterFuncs> InFilterFuncs);
     #else
@@ -554,7 +554,7 @@
 
     从 UE5\.1 开始被移除。此前这个函数只在 `IEditableTextProperty` 的 `Tick` 函数中被调用，而在 UE5\.1 中 `Tick` 函数也被移除。
 
-    ```c++
+    ```cpp
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 1 || ENGINE_MAJOR_VERSION < 5
         virtual void RequestRefresh() override;
     #endif
@@ -567,7 +567,7 @@
 
 从 UE5\.1 开始，`TSharedRef`，`TSharedPtr`，`TWeakPtr` 和 `TSharedFromThis` 类相关的函数大部分带有 `[[nodiscard]]` 属性，这是一种 C\+\+17 标准下的语法，调用带有这种属性的函数时，其返回值不应该被丢弃，否则会出现编译警告或者错误。
 
-```c++
+```cpp
 // 以 TSharedRef 为例
 
 TSharedRef<SWidget> WidgetRef;
@@ -589,7 +589,7 @@ TSharedRef<SWidget> WidgetRef;
 
 从 UE5\.0 开始，`TArray`，`TList`，`TSet` 和 `TMap` 这四种常用的泛型容器类型增加了判断容器是否为空的函数 `IsEmpty`。
 
-```c++
+```cpp
 const TArray<uint8> Array;
 const TList<uint8> List;
 const TSet<uint8> Set;
@@ -645,7 +645,7 @@ const TMap<uint8, uint8> Map;
 
 从 UE5\.0 开始被 `FSingleWidgetChildrenWithBasicLayoutSlot` 类所替代。注意引擎的注释是错的，并不存在 `FSingleWidgetChildrenWithSimpleSlot` 类。
 
-```c++
+```cpp
 #if ENGINE_MAJOR_VERSION >= 5
     FSingleWidgetChildrenWithBasicLayoutSlot Slot;
 #else
@@ -660,7 +660,7 @@ const TMap<uint8, uint8> Map;
 
 从 UE5\.0 开始，`FEditorStyle` 类中除 `ResetToDefault` 外的所有公开函数，全部可以改为通过 `FAppStyle` 类来调用，从 UE5\.1 开始要求必须通过 `FAppStyle` 类来调用。
 
-```c++
+```cpp
 // 获取样式数据的单例
 #if ENGINE_MAJOR_VERSION >= 5
     const ISlateStyle& Style = FAppStyle::Get();
@@ -678,7 +678,7 @@ const TMap<uint8, uint8> Map;
 
     从 UE5\.1 开始参数列表发生变化，`ControllerId` 参数被移除，取而代之的是一个 `FPlatformUserId` 类型的参数 `PlatformUserId` 和一个 `FInputDeviceId` 类型的参数 `DeviceId`。`FPlatformUserId` 和 `FInputDeviceId` 结构体的声明请见 CoreMiscDefines\.h。
 
-    ```c++
+    ```cpp
     FSlateApplication& Application = FSlateApplication::Get();
     const TSharedPtr<FGenericWindow> Window;
     const FVector2D TouchPoint;
@@ -716,7 +716,7 @@ const TMap<uint8, uint8> Map;
 
     从 UE5\.1 开始，返回值的类型从 `UNiagaraEmitter*` 变为 `FVersionedNiagaraEmitter`。后者是 UE5\.1 新增的类型，声明请见 NiagaraTypes\.h。
 
-    ```c++
+    ```cpp
     const TSharedRef<FNiagaraEmitterInstance> Instance;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         UNiagaraEmitter* const Emitter = Instance->GetCachedEmitter().Emitter;
@@ -734,7 +734,7 @@ const TMap<uint8, uint8> Map;
 
     该函数从 UE5\.0 开始新增，从 UE5\.1 开始被 `ShapeOverflowEllipsisText` 函数所替代。按照引擎的注释，替代者是 `FShapedTextCache` 类的 `FindOrAddOverflowEllipsisText` 函数，然而这个函数与 `GetOverflowEllipsisText` 的差异过大，因此建议使用 `ShapeOverflowEllipsisText` 函数。
 
-    ```c++
+    ```cpp
     #if ENGINE_MAJOR_VERSION >= 5
         FSlateFontCache FontCache;
         const FSlateFontInfo FontInfo;
@@ -756,7 +756,7 @@ const TMap<uint8, uint8> Map;
 
     从 UE5\.1 开始，参数列表发生变化。
 
-    ```c++
+    ```cpp
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         virtual void OnPostCDOCompiled(const UObject::FPostCDOCompiledContext& Context);
     #else
@@ -771,7 +771,7 @@ const TMap<uint8, uint8> Map;
 
 示例：
 
-```c++
+```cpp
 USTRUCT()
 struct MYPROJECT_API FMyBPStruct
 {
@@ -795,7 +795,7 @@ struct MYPROJECT_API FMyBPStruct
 
 + 声明时指定初始值
 
-    ```c++
+    ```cpp
     USTRUCT()
     struct MYPROJECT_API FMyBPStruct
     {
@@ -809,7 +809,7 @@ struct MYPROJECT_API FMyBPStruct
 
 + 定义构造函数
 
-    ```c++
+    ```cpp
     USTRUCT()
     struct MYPROJECT_API FMyBPStruct
     {
@@ -838,7 +838,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始废弃了以 `FName` 类型作为路径参数的构造函数重载。
 
-    ```c++
+    ```cpp
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 1 || ENGINE_MAJOR_VERSION < 5
         const FName AssetPath;
         // 重载版本1
@@ -855,7 +855,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始被 `GetAssetPath` 函数所替代。
 
-    ```c++
+    ```cpp
     const FSoftObjectPath Path;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         const FString& PathName = Path.GetAssetPath().ToString();
@@ -879,7 +879,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始，参数列表发生变化，增加了一个 `EShaderPlatform` 类型的参数 `InShaderPlatform` 和一个 `FName` 类型的参数 `InShaderPlatformName`。
 
-    ```c++
+    ```cpp
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         // 参数 InDeviceProfileName，InbPreviewFeatureLevelActive 和 InShaderPlatformName 分别使用默认值 NAME_None，false 和 NAME_None
         const FPreviewPlatformInfo Info(ERHIFeatureLevel::ES3_1, EShaderPlatform::SP_VULKAN_ES3_1_ANDROID, TEXT("Android"), TEXT("GLSL_ES3_1_ANDROID"));
@@ -898,7 +898,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始被 `AssetClassPath` 属性所替代，类型是 `FTopLevelAssetPath`。`FTopLevelAssetPath` 的声明请见 TopLevelAssetPath\.h。
 
-    ```c++
+    ```cpp
     const FAssetData AssetData;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         // 从 UE5.1 开始，引擎要求避免使用 FName 作为路径变量的类型
@@ -912,7 +912,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始被 `GetSoftObjectPath` 函数或者是 `GetObjectPathString` 函数所替代。
 
-    ```c++
+    ```cpp
     const FAssetData AssetData;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         // 或通过 AssetData.GetSoftObjectPath() 得到一个 FSoftObjectPath 类型的变量
@@ -931,7 +931,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.0 开始被 `OnObjectPreSaved` 属性所替代。
 
-    ```c++
+    ```cpp
     // 注意回调的参数列表有所变化
     #if ENGINE_MAJOR_VERSION >= 5
         FDelegateHandle Handle = FCoreUObjectDelegates::OnObjectPreSave.AddLambda([](UObject* const Object, const FObjectPreSaveContext Context) -> void
@@ -955,7 +955,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始不再支持直接访问，需要调用 `GetPrincipalEncryptionKey` 和 `FKeyChainSetPrincipalEncryptionKey` 函数。
 
-    ```c++
+    ```cpp
     FKeyChain KeyChain;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         // Get
@@ -974,7 +974,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始不再支持直接访问，需要调用 `GetEncryptionKeys` 和 `SetEncryptionKeys` 函数。
 
-    ```c++
+    ```cpp
     FKeyChain KeyChain;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         // Get
@@ -993,7 +993,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始不再支持直接访问，需要调用 `GetSigningKey` 和 `SetSigningKey` 函数。
 
-    ```c++
+    ```cpp
     FKeyChain KeyChain;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         // Get
@@ -1017,7 +1017,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始被移至 `FStaticParameterSetEditorOnlyData` 结构体中，并且要求在 `WITH_EDITORONLY_DATA` 宏的分支下使用。`FStaticParameterSetEditorOnlyData` 是 UE5\.1 新增的类型，声明请见 StaticParameterSet\.h。
 
-    ```c++
+    ```cpp
     FStaticParameterSet Set;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
     #if WITH_EDITORONLY_DATA
@@ -1032,7 +1032,7 @@ struct MYPROJECT_API FMyBPStruct
 
     变化同 `StaticSwitchParameters` 属性。
 
-    ```c++
+    ```cpp
     FStaticParameterSet Set;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
     #if WITH_EDITORONLY_DATA
@@ -1047,7 +1047,7 @@ struct MYPROJECT_API FMyBPStruct
 
     变化同 `StaticSwitchParameters` 属性。
 
-    ```c++
+    ```cpp
     FStaticParameterSet Set;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
     #if WITH_EDITORONLY_DATA
@@ -1062,7 +1062,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始，类型从 `FMaterialLayersFunctions` 变为 `FMaterialLayersFunctionsRuntimeData`。后者是 UE5\.1 新增的类型，声明请见 MaterialLayersFunctions\.h。
 
-    ```c++
+    ```cpp
     FStaticParameterSet Set;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         FMaterialLayersFunctionsRuntimeData& MaterialLayers = Set.MaterialLayers;
@@ -1080,7 +1080,7 @@ struct MYPROJECT_API FMyBPStruct
 
     从 UE5\.1 开始被 `ClassPaths` 属性所替代，类型变为 `TArray<FTopLevelAssetPath>`。
 
-    ```c++
+    ```cpp
     FARFilter Filter;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
         TArray<FTopLevelAssetPath>& ClassPaths = Filter.ClassPaths;
@@ -1103,7 +1103,7 @@ struct MYPROJECT_API FMyBPStruct
 
 从 UE5\.0 开始被 `SLATE_SLOT_ARGUMENT` 宏所替代。
 
-```c++
+```cpp
 #if ENGINE_MAJOR_VERSION >= 5
     SLATE_SUPPORTS_SLOT(FSimpleSlot)
 #else
@@ -1122,7 +1122,7 @@ struct MYPROJECT_API FMyBPStruct
 
 从 UE5\.1 开始被废弃。这个宏主要用于 `FindObject` 函数 `Outer` 参数的传递。从 UE5\.1 开始，引擎要求在调用 `FindObject` 函数时应当提供有效的 `Outer` 参数或者待查找对象的完整路径。`FindObject` 函数的声明请见 UObjectGlobals\.h。
 
-```c++
+```cpp
 const TCHAR* const ObjectName;
 #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
     const FName ObjectPathName;
@@ -1143,7 +1143,7 @@ const TCHAR* const ObjectName;
 
 从 UE5\.1 开始被 `UE_DEBUG_BREAK_AND_PROMPT_FOR_REMOTE` 宏所替代。
 
-```c++
+```cpp
 #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
     UE_DEBUG_BREAK_AND_PROMPT_FOR_REMOTE();
 #else
@@ -1156,7 +1156,7 @@ const TCHAR* const ObjectName;
 
 从 UE4\.25 开始，各种蓝图属性类型宏定义的前缀从 'U' 改为 'F'，例如 `UProperty` 改为 `FProperty`。这些宏定义在 DefineUPropertyMacros\.h，作用是将 UnrealTypePrivate\.h 中定义的类型重定向至 UnrealType\.h 中定义的类型。DefineUPropertyMacros\.h 从 UE5\.1 开始被删除，意味着从 UE5\.1 开始，直接访问前缀为 'U' 的蓝图属性类型宏定义会出现编译错误。
 
-```c++
+```cpp
 // 以 UProperty 和 FProperty 为例
 
 #if ENGINE_MAJOR_VERSION >= 4 && ENGINE_MINOR_VERSION >= 25
@@ -1178,7 +1178,7 @@ const TCHAR* const ObjectName;
 
 从 UE5\.1 开始，EditorStyleSettings\.h 文件从 EditorStyle 模块的 Public/Classes 目录移至 UnrealEd 模块的 Classes/Settings 目录。
 
-```c++
+```cpp
 #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
     // 需要依赖 UnrealEd 模块
     #include "Classes/Settings/EditorStyleSettings.h"
@@ -1192,7 +1192,7 @@ const TCHAR* const ObjectName;
 
 从 UE5\.0 开始，该文件被移除，`FAssetEditorManager` 类也随之被废弃。
 
-```c++
+```cpp
 #if ENGINE_MAJOR_VERSION < 5
 #include "Toolkits/AssetEditorManager.h"
 #endif

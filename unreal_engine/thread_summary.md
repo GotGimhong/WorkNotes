@@ -20,7 +20,7 @@
 
 示例：
 
-```c++
+```cpp
 /**
  * 并发执行主体函数5次
  *
@@ -47,7 +47,7 @@ ParallelFor(5, [](int32 Index) -> void
 
 示例：
 
-```c++
+```cpp
 /**
  * 选择任意一个线程来执行主体函数
  *
@@ -70,7 +70,7 @@ AsyncTask(ENamedThreads::AnyThread, []() -> void
 
 示例：
 
-```c++
+```cpp
 class FMyRunnable : public FRunnable
 {
 public:
@@ -122,7 +122,7 @@ private:
 
 `FCriticalSection` 类型可以理解为信号量，或者互斥锁。它提供了 `Lock` 和 `Unlock` 两个接口，分别用于加锁（递增信号量）和解锁（递减信号量），在这两个接口调用之间的代码块是线程安全的。示例如下：
 
-```c++
+```cpp
 // 信号量/互斥锁
 static FCriticalSection Mutex;
 
@@ -153,7 +153,7 @@ int ThreadLoop()
 
 `FScopeLock` 是 `FCriticalSection` 的一个派生类型。它不提供任何接口，直接让其作用域处于线程安全的状态，原理是 `FScopeLock` 在构造函数中调用 `Lock`，在析构函数中调用 `Unlock`。示例如下：
 
-```c++
+```cpp
 // 信号量/互斥锁
 static FCriticalSection Mutex;
 

@@ -46,7 +46,7 @@
 
 接下来就需要对 `SDPIScaler` 进行修改，让它能够发挥类似 `SSafeZone` 的作用，作为裁剪区大小的传递媒介。修改方法主要是增加一个记录裁剪区大小的成员属性，然后在 `OnArrangeChildren` 和 `ComputeDesiredSize` 函数中，参考 `SSafeZone` 的做法将裁剪区大小应用到 UI 布局的计算当中，示例代码如下：
 
-```c++
+```cpp
 /** SDPIScaler.h */
 
 class SLATE_API SDPIScaler : public SPanel
@@ -76,7 +76,7 @@ protected:
 };
 ```
 
-```c++
+```cpp
 /** SDPIScaler.cpp */
 
 void SDPIScaler::SetCutoutSize(TAttribute<FMargin> InCutoutSize)
@@ -135,7 +135,7 @@ FVector2D SDPIScaler::ComputeDesiredSize(float) const
 
 完成 `SDPIScaler` 的修改之后，每当裁剪区大小更新时（通过引擎接口或者自研 SDK），就可以调用接口 `SetCutoutSize` 将裁剪区大小传递给 `SDPIScaler`，以进行 UI 屏幕适配了。示例代码如下：
 
-```c++
+```cpp
 /**
  * 获取更新后的裁剪区大小
  */
@@ -162,7 +162,7 @@ if (TSharedPtr<SGameLayerManager> GameLayerManager = GEngine->GameViewport != nu
 
 对此，可以在项目设置中增加一个特殊设备的清单，这个清单可以写出到 ini 格式的配置文件中，例如 DefaultGame\.ini，DefaultEngine\.ini 等，然后对清单上的机型进行针对性适配。这个配置文件通常需要支持热更新，因为在项目开发当中，DefaultGame.ini，DefaultEngine.ini 等配置文件热更新的需求较低，所以建议为特殊设备的清单单独创建一个配置文件，而非整合到现有的配置文件中，以控制热更新的粒度。示例代码如下：
 
-```c++
+```cpp
 /**
  * 定义 UI 屏幕适配相关的配置项
  */
@@ -184,7 +184,7 @@ public:
 
 尽管引擎原生支持 ini 格式配置文件的热更新，但是因为引擎在热更新之前就完成了配置文件的加载，并且在热更新完成后不会自动重新加载配置文件，所以默认情况下配置文件的热更新是不生效的。为了让特殊设备清单所在配置文件的热更新生效，需要在热更新完成后手动重新加载这个配置文件。示例代码如下:
 
-```c++
+```cpp
 /**
  * 热更新完成的事件委托
  * 建议定义在单独的非 C++ 类中，或者作为全局变量，作为热更新和 UI 屏幕适配两个功能之间的纽带；因为两个功能的生命周期无法确保一致，如果将事件委托定义在其中之一，就会容易出现非法访问的问题

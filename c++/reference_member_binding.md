@@ -9,7 +9,7 @@ binding reference member 'xx' to stack allocated parameter 'yy'
 
 原因是在类的构造函数中，将临时变量传递给了引用类型的成员变量，并且前者的生命周期小于后者。示例如下：
 
-```c++
+```cpp
 using std::string;
 
 class FObj
@@ -31,7 +31,7 @@ class FObj
 
 	以上述示例为例：
 
-	```c++
+	```cpp
 	/**
 	 * 旧的做法：
 	   void FObj(const string newName) : name(newName)
@@ -52,7 +52,7 @@ class FObj
 
 	以上述示例为例：
 
-	```c++
+	```cpp
 	/**
 	 * 旧的做法：
 	   const string& name;

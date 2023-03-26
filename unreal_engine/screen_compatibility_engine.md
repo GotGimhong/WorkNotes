@@ -70,7 +70,7 @@ SafeZone 控件提供的适配效果，作用于以 SafeZone 控件为根控件�
 
 关键源码如下：
 
-```c++
+```cpp
 /** SSafeZone.cpp */
 
 void SSafeZone::Construct(const FArguments& InArgs)
@@ -154,7 +154,7 @@ FVector2D SSafeZone::ComputeDesiredSize(float LayoutScale) const
 
 关键源码如下：
 
-```c++
+```cpp
 /** SlateApplicationBase.cpp */
 
 void FSlateApplicationBase::GetSafeZoneSize(FMargin& SafeZone, const FVector2D& OverrideSize)
@@ -188,7 +188,7 @@ void FSlateApplicationBase::GetDisplayMetrics(FDisplayMetrics& OutDisplayMetrics
 
 关键源码如下：
 
-```c++
+```cpp
 /** GenericApplication.h */
 
 struct FDisplayMetrics
@@ -224,7 +224,7 @@ struct FDisplayMetrics
 
 关键源码如下：
 
-```c++
+```cpp
 /** AndroidApplication.cpp */
 
 void FDisplayMetrics::RebuildDisplayMetrics(FDisplayMetrics& OutDisplayMetrics)
@@ -256,7 +256,7 @@ void FDisplayMetrics::RebuildDisplayMetrics(FDisplayMetrics& OutDisplayMetrics)
 
 关键源码如下：
 
-```c++
+```cpp
 /** AndroidWindow.cpp */
 
 FVector4 FAndroidWindow::GetSafezone(bool bPortrait)

@@ -23,7 +23,7 @@
     );
     ```
 
-    ```
+    ```json
     // GameProject.uproject
 
     // 将运行时模块 TargetModule 添加至 .uproject 文件中
@@ -44,7 +44,7 @@
 
 + 确保模块的蓝图（反射）内容在 C\+\+ 代码中被引用；示例如下：
 
-    ```c++
+    ```cpp
     // 来自 TargetModule 的纯 C++ 类
     class TARGETMODULE_API FCPPClass
     {
@@ -162,7 +162,7 @@
 
 + 在引起编译错误的头文件，例如 luasocket\.h 当中，添加 `WIN32_LEAN_AND_MEAN` 宏的定义，表示以最简的方式去包含 Windows SDK 依赖；示例如下：
 
-    ```c++
+    ```cpp
     // luasocket.h
     #ifndef LUASOCKET_H
     #define LUASOCKET_H

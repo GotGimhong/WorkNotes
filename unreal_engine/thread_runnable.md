@@ -44,7 +44,7 @@ Run -->| 运行结束 | Exit
 
 `Run` 函数在线程运行过程中只会调用一次，因此如果需要在线程中实现持久性的逻辑，例如 Tcp 连接状态的维护，就需要在其中**实现一个循环体，并且处理好线程的挂起和恢复**。示例如下：
 
-```c++
+```cpp
 uint32 FMyRunnable::Run()
 {
     {
@@ -96,7 +96,7 @@ Block1 --> Block2
 
 线程被外部中止时，往往还没有结束运行，因此在 `Stop` 函数中应当修改线程执行主体的某些成员变量，确保循环体的循环条件不再满足。如此，在执行下一次循环时就会正常退出循环体，从而结束线程的运行，否则就会导致线程无法中止。示例如下：
 
-```c++
+```cpp
 void FMyRunnable::Stop()
 {
     // 让循环条件不再满足
@@ -114,7 +114,7 @@ void FMyRunnable::Stop()
 
 常规的做法是让线程执行主体类同时继承 `FRunnable` 类和 `FSingleThreadRunnable` 类，如此在 `GetSingleThreadInterface` 函数中返回自身即可。
 
-```c++
+```cpp
 FSingleThreadInterface* FMyRunnable::GetSingleThreadInterface()
 {
     // 当前的线程执行主体类型应当继承自 FSingleThreadRunnable 类
@@ -141,7 +141,7 @@ FSingleThreadInterface* FMyRunnable::GetSingleThreadInterface()
 
 `Create` 接口是一个静态函数，用于创建一个线程实例。注意这个过程涉及内存的动态分配，在销毁线程时应当**手动回收内存**，或者使用智能对象封装线程。
 
-```c++
+```cpp
 // RunnableThread.h
 
 /**
@@ -168,7 +168,7 @@ static FRunnableThread* Create(
 
 调用这个接口后，引擎会暂时让待中止的线程占据所有的运行资源，线程执行主体在结束 `Run` 函数的执行后会执行 `Exit` 函数以结束线程的运行。假如在线程执行主体的 `Stop` 函数中没有做好处理，使得循环体的循环条件仍然满足，就会让循环体无限执行，从而导致游戏卡死。如果选择强制中止线程，就会使得线程执行主体 `Run` 函数的余下流程和 `Exit` 函数都不会执行，这可能会引起内存泄漏的问题。因此，在线程执行主体的 `Stop` 函数中做好处理，然后在中止线程时等待线程结束运行，这是最妥当的做法。
 
-```c++
+```cpp
 // RunnableThread.h
 
 /**
@@ -182,7 +182,7 @@ virtual bool Kill(bool bShouldWait = true) = 0;
 
 `Suspend` 接口用于挂起和恢复线程。线程挂起后，引擎不再为它分配运行资源；线程恢复后，会重新参与引擎的多线程调度。
 
-```c++
+```cpp
 // RunnableThread.h
 
 /**
@@ -195,7 +195,7 @@ virtual void Suspend(bool bShouldPause = true) = 0;
 
 每个线程都应该由对应的线程执行主体来维护，因此在每个线程执行主体类中，都需要声明一个 `FRunnableThread` 指针类型或者智能指针类型的成员。然后，在线程执行主体中处理线程的创建和销毁，通常的做法是在线程执行主体类的构造函数中创建线程，在析构函数中销毁线程。至于线程的挂起，恢复，设置优先度等操作，则按需添加。示例如下：
 
-```c++
+```cpp
 FMyRunnable::FMyRunnable()
 {
     Thread = FRunnableThread::Create(this, TEXT("MyRunnableThread"));
@@ -221,7 +221,7 @@ FMyRunnable::~FMyRunnable()
 
 考虑以下的示例，为了统一和简化线程执行主体类的写法，我们实现了一个 `IMyRunnableBase` 类，在这个类当中实现了 `Init`，`Run`，`Stop` 和 `Exit` 函数，其他的派生类只需要继承 `IMyRunnableBase` 类，然后实现虚函数 `LoopBody`：
 
-```c++
+```cpp
 // 基类
 class IMyRunnableBase : public FRunnable
 {
@@ -286,7 +286,7 @@ private:
 
 + 在 `IMyRunnableBase` 类的构造函数当中创建线程
 
-    ```c++
+    ```cpp
     class IMyRunnableBase : public FRunnable
     {
         // ...
@@ -309,7 +309,7 @@ private:
 
 + 在 `IMyRunnableBase` 派生类的构造函数当中创建线程
 
-    ```c++
+    ```cpp
     class FMyRunnableA : public IMyRunnableBase
     {
         // ...
@@ -339,7 +339,7 @@ private:
 
 当然，我们也可以在派生类实例化之后再来创建线程，由于抽象类不能实例化，那么我们自然就不会遇到这种问题。示例如下：
 
-```c++
+```cpp
 // IMyRunnableBase 类不能实例化，出现编译错误
 IMyRunnableBase* RunnableBase = new IMyRunnableBase();
 RunnableBase->Thread = FRunnableThread::Create(RunnableBase, TEXT("MyRunnableBase"));

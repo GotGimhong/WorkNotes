@@ -22,7 +22,7 @@
 
 或者直接在 DefaultEngine.ini 中增加以下内容，两种做法是等价的：
 
-```
+```ini
 [/Script/IOSRuntimeSettings.IOSRuntimeSettings]
 WindowsMetalToolchainOverride={Metal Developer Tools 安装路径}
 ```
@@ -38,7 +38,7 @@ WindowsMetalToolchainOverride={Metal Developer Tools 安装路径}
 
 引擎源码请见 MetalShaderFormat\.cpp：
 
-```c++
+```cpp
 // MetalShaderFormat.cpp
 
 // 默认的安装路径

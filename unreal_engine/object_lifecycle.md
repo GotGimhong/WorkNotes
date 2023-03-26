@@ -17,7 +17,7 @@
 
     `Unreachable` 标签相关接口的使用示例如下，这些接口都可以由 `UObject` 的派生类继承：
 
-    ```c++
+    ```cpp
     UObject* MyObject;
     /**
      * 移除 Unreachable 标签
@@ -45,7 +45,7 @@
 
     `PendingKill` 标签相关接口的使用示例如下，这些接口都可以由 `UObject` 的派生类继承：
 
-    ```c++
+    ```cpp
     UObject* MyObject;
     /**
      * 添加 PendingKill 标签
@@ -75,7 +75,7 @@
 
     `RootSet` 和 `PendingKill` 这两个标签原则上是互斥的，具有 `RootSet` 标签的对象不能再添加 `PendingKill` 标签，具有 `PendingKill` 标签的对象也不应该再添加 `RootSet` 标签。如果尝试为一个具有 `RootSet` 标签的对象添加 `PendingKill` 标签，就会触发错误（请见 `MarkPendingKill` 函数的实现）；如果尝试为一个具有 `PendingKill` 标签的对象添加 `RootSet` 标签，就会让该对象无法被销毁，因为 `RootSet` 标签的优先级高于 `PendingKill` 标签，虽然不会触发错误，但是在游戏逻辑上可能会让人困扰，因此不建议这种做法。相关的引擎源码如下：
 
-    ```c++
+    ```cpp
     /** UObjectBaseUtility.h */
 
     class COREUOBJECT_API UObjectBaseUtility : public UObjectBase
@@ -98,7 +98,7 @@
 
     `RootSet` 标签相关接口的使用示例如下，这些接口都可以由 `UObject` 的派生类继承：
 
-    ```c++
+    ```cpp
     UObject* MyObject;
     /**
      * 添加 RootSet 标签
@@ -123,7 +123,7 @@
 
     对象销毁的预处理在 `UObject` 类的成员函数 `BeginDestroy` 函数中进行，这个函数是通过另一个成员函数 `ConditionalBeginDestroy` 驱动的；在 `ConditionalBeginDestroy` 函数中，引擎会为对象添加 `RF_BeginDestroy` 标签。`RF_BeginDestroy` 标签一旦添加就不会移除，即使在进行销毁的后处理时，对象依然具有 `RF_BeginDestroy` 标签。
 
-    ```c++
+    ```cpp
     /** Obj.cpp */
 
     bool UObject::ConditionalBeginDestroy()
@@ -151,7 +151,7 @@
 
     和预处理类似，对象销毁的后处理在 `UObject` 类的成员函数 `FinishDestroy` 函数中进行，这个函数是通过另一个成员函数 `ConditionalFinishDestroy` 驱动的；在 `ConditionalFinishDestroy` 函数中，引擎会为对象添加 `RF_FinishDestroy` 标签。
 
-    ```c++
+    ```cpp
     /** Obj.cpp */
 
     bool UObject::ConditionalFinishDestroy()
@@ -183,7 +183,7 @@
 
 预处理阶段由 `UObject` 类的成员函数 `ConditionalBeginDestroy` 驱动，它的主要作用是为对象添加 `RF_BeginDestroy` 标签，调用 `BeginDestroy`，以及添加性能埋点；成员函数 `BeginDestroy` 则实现预处理的核心逻辑，在游戏逻辑中通常也会被重写以添加定制处理。
 
-```c++
+```cpp
 /** Object.h */
 
 class COREUOBJECT_API UObject : public UObjectBaseUtility
@@ -216,7 +216,7 @@ class COREUOBJECT_API UObject : public UObjectBaseUtility
 
 2. 定制处理建议在调用基类的 `BeginDestroy` 之前完成，否则定制处理可能会出错，或者出现和预期不符的结果
 
-    ```c++
+    ```cpp
     void UMyObject::BeginDestroy()
     {
         /** 在调用基类的 BeginDestroy 之前，仍然可以访问对象的名称，关联的连接器和包 */
@@ -239,7 +239,7 @@ class COREUOBJECT_API UObject : public UObjectBaseUtility
 
 后处理阶段由 `UObject` 类的成员函数 `ConditionalFinishDestroy` 驱动，它的主要作用是为对象添加 `RF_FinishDestroy` 标签，调用 `FinishDestroy`，以及移除对象销毁的事件监听；成员函数 `FinishDestroy` 则实现后处理的核心逻辑，在游戏逻辑中偶尔也会被重写以添加定制处理。
 
-```c++
+```cpp
 /** Object.h */
 
 class COREUOBJECT_API UObject : public UObjectBaseUtility
@@ -260,7 +260,7 @@ class COREUOBJECT_API UObject : public UObjectBaseUtility
 
 在 `FinishDestroy` 中，后处理的核心逻辑是清除蓝图属性。因此，定制处理建议在调用基类的 `FinishDestroy` 之前完成，否则定制处理可能会出错，或者出现和预期不符的结果。
 
-```c++
+```cpp
 void UMyObject::FinishDestroy()
 {
     /** 在调用基类的 FinishDestroy 之前，仍然可以访问蓝图属性 */

@@ -19,14 +19,14 @@
 
 使用 uproject 文件右键菜单的生成 Xcode 项目功能是更新项目代码的最简便做法，类似 Windows 中的生成解决方案。当然也可以使用命令行脚本的方式，不过填入的**路径参数必须为绝对路径**，否则会提示找不到 uproject 文件。命令如下：
 
-```shell
+```powershell
 $ cd "/Users/{用户根目录}/../{引擎根目录}/Engine/Build/BatchFiles/Mac"
 $ sh "/Users/{用户根目录}/../{引擎根目录}/Engine/Build/BatchFiles/Mac/GenerateProjectFiles.sh" -project="/Users/{用户根目录}/../{项目根目录}/{项目名称}.uproject" -game
 ```
 
 示例：
 
-```shell
+```powershell
 $ cd "/Users/a4399/CustomEngine/customengine/Engine/Build/BatchFiles/Mac"
 $ sh "/Users/a4399/CustomEngine/customengine/Engine/Build/BatchFiles/Mac/GenerateProjectFiles.sh" -project="/Users/a4399/UE4/MyProject/MyProject.uproject" -game
 ```

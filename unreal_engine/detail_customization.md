@@ -14,7 +14,7 @@
 
 它的核心是实现一个 `IDetailCustomization` 的派生类，重写虚函数 `CustomizeDetails`。这个虚函数有两个重载版本，其中一个引擎提供了默认的实现，我们重写另一个纯虚函数即可（详见引擎源码 IDetailCustomization\.h）。示例如下：
 
-```c++
+```cpp
 // 假设需要定制的蓝图类为 UMyBPObj
 
 void FMyBPObjCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailLayout)
@@ -74,7 +74,7 @@ void FMyBPObjCustomization::AddCustomDetails(IDetailLayoutBuilder& DetailLayout)
 
 需要注意，蓝图类定制仅限在蓝图类中定义的蓝图属性，不包括**从基类中继承**的蓝图属性。示例如下：
 
-```c++
+```cpp
 UCLASS()
 class UMyBPObjBase : public UObject
 {
@@ -115,7 +115,7 @@ void FMyBPObjCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailLayout)
 
 如果不希望在派生类的细节面板中显示继承而来的蓝图属性，需要在基类的蓝图类定制中处理。示例如下：
 
-```c++
+```cpp
 // UMyBPObjBase 的蓝图类定制
 void FMyBPObjBaseCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailLayout)
 {
@@ -145,7 +145,7 @@ void FMyBPObjBaseCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailLay
 
 它的核心是实现一个 `IPropertyTypeCustomization` 的派生类，重写虚函数 `CustomizeHeader` 和 `CustomizeChildren` （详见引擎源码 IPropertyTypeCustomization\.h）。示例如下：
 
-```c++
+```cpp
 // 假设需要定制的属性类型为 FMyProp
 
 // 定制 FMyProp 的名称部分，与蓝图类定制中 NameContent 和 NameWidget 的处理相似，通常不需要定制，使用默认方式即可
@@ -201,7 +201,7 @@ void FMyPropCustomization::AddCustomDetails(const TSharedRef<IPropertyHandle> Pa
 
 引擎还提供了 `AllowedClasses` 和 `DisallowedClasses` 两个元数据，用于定义额外需要包含和排除的类，示例如下。
 
-```c++
+```cpp
 /**
  * 示例一：在下拉菜单中列出的蓝图类满足以下条件：
    1. 是 Actor 的派生类
@@ -224,7 +224,7 @@ TSubclassOf<AActor> Actors;
 
     在蓝图细节面板中，针对每个 `TSubclassOf` 和 `TAssetSubclassOf` 类型的蓝图属性，引擎都会通过一个 `SClassPropertyEntryBox` 类型的控件进行绘制，它定义在这两个代码中。
 
-    ```c++
+    ```cpp
     // PropertyCustomizationHelpers.h
 
     // ...
@@ -250,7 +250,7 @@ TSubclassOf<AActor> Actors;
     // ...
     ```
 
-    ```c++
+    ```cpp
     // PropertyCustomizationHelpers.cpp
 
     // ...
@@ -278,7 +278,7 @@ TSubclassOf<AActor> Actors;
 
     `SClassPropertyEntryBox` 类的底层是 `SPropertyEditorClass` 类，这个类通过 `FPropertyEditorClassFilter` 类实现蓝图类的筛选。
 
-    ```c++
+    ```cpp
     // SPropertyEditorClass.h
 
     // ...
@@ -304,7 +304,7 @@ TSubclassOf<AActor> Actors;
     };
     ```
 
-    ```c++
+    ```cpp
     // SPropertyEditorClass.cpp
 
     // ...

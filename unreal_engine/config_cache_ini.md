@@ -32,7 +32,7 @@
 
     在 `FConfigCacheIni` 类中，键是 ini 文件的路径，值是对应的 ini 文件内容，类型是 `FConfigFile`。例如：
 
-    ```c++
+    ```cpp
     // 返回 Engine.ini 的配置数据
     // 通过 this 指针来调用 TMap 的接口
     FConfigFile* const File = TMap<FString, FConfigFile>::Find(FString(TEXT("../../Saved/Config/Windows/Engine.ini")));
@@ -40,7 +40,7 @@
 
     `FConfigFile` 类的一个实例包含一份 ini 文件的全部内容，其中，键是配置类别的名称，值是对应配置类别下的配置数据，类型是 `FConfigSection`。例如：
 
-    ```c++
+    ```cpp
     FConfigFile* const File;
     // 返回重定向相关的配置数据（在 ini 文件中的配置类别是 [CoreRedirects]）
     FConfigSection* const Section = File->Find(FString(TEXT("CoreRedirects")));
@@ -48,7 +48,7 @@
 
     `FConfigSection` 类的一个实例包含一个配置类别下的配置数据，其中，键是配置项的键，值是配置项的值，类型是 `FConfigValue`。例如：
 
-    ```c++
+    ```cpp
     FConfigSection* const Section;
     // 返回键是 'A' 的配置项值（在 ini 文件中的配置项是 A=xxxx）
     const FConfigValue* const Value = Section->Find(FName(TEXT("A")));
@@ -84,7 +84,7 @@
 
     在 `FConfigCacheIni` 中，由 `TMap<FString, FConfigFile*>` 类型的成员属性 `OtherFiles` 存储 ini 配置数据，键是 ini 文件的路径，值是对应的 ini 文件内容。例如：
 
-    ```c++
+    ```cpp
     // 返回 Engine.ini 的配置数据
     // 通过成员属性 OtherFiles 来调用 TMap 的接口；因为存储的是 FConfigFile 指针，所以建议使用 FindRef 接口来查询
     FConfigFile* const File = OtherFiles.FindRef(FString(TEXT("../../Saved/Config/Windows/Engine.ini")));
@@ -119,7 +119,7 @@ GConfig
 
 为了方便自定义配置数据的存储和访问，建议在 `FConfigCacheIni` 类中添加一些通用的接口，示例如下：
 
-```c++
+```cpp
 /** 判断是否包含某个 FConfigFile 实例 */
 bool FConfigCacheIni::ContainFile(const FString& Filename) const
 {

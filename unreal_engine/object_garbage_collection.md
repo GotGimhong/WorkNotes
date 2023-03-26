@@ -7,7 +7,7 @@
 
 引擎每帧都会检测是否需要进行 GC，`UEngine` 的成员属性 `TimeSinceLastPendingKillPurge` 记录上一次 GC 至今的时间间隔，当它大于或者等于成员函数 `GetTimeBetweenGarbageCollectionPasses` 的返回值时，就会执行一次 GC，然后将 `TimeSinceLastPendingKillPurge` 清零。其中，`GetTimeBetweenGarbageCollectionPasses` 返回两次 GC 之间的时间间隔，默认是60秒。强制 GC 的原理就是将 `TimeSinceLastPendingKillPurge` 设置为一个大于 `GetTimeBetweenGarbageCollectionPasses` 返回值的值，从而让引擎在下一帧执行一次 GC。
 
-```c++
+```cpp
 /** UnrealEngine.cpp */
 
 void UEngine::ForceGarbageCollection(bool bForcePurge)
@@ -25,7 +25,7 @@ void UEngine::ForceGarbageCollection(bool bForcePurge)
 
 引擎每帧都会调用 `UEngine` 的成员函数 `ConditionalCollectGarbage` 检查是否需要进行 GC，这也是 GC 流程的入口。
 
-```c++
+```cpp
 /** LevelTick.cpp */
 
 void UWorld::Tick(ELevelTick TickType, float DeltaSeconds)
