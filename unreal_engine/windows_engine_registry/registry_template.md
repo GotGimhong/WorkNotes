@@ -1,3 +1,6 @@
+**Registry\.bat**
+
+```powershell
 @echo off
 
 :: 不同引擎的根目录，和 UnrealVersionSelector.exe 的文件名有所不同，切换之前调整该参数即可
@@ -22,3 +25,4 @@ reg add HKEY_CLASSES_ROOT\Unreal.ProjectFile\shell\switchversion /v Icon /t REG_
 reg add HKEY_CLASSES_ROOT\Unreal.ProjectFile\shell\switchversion\command /ve /t REG_SZ /d """"%UVS_PATH%""" /switchversion """%%1"""" /f
 
 pause
+```

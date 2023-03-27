@@ -50,4 +50,4 @@
 
 ## 切换引擎
 
-通常可以直接使用 引擎根目录/Engine/Binaries/Win64 下的 UnrealVersionSelector\.exe 来切换 `HKEY_CLASSES_ROOT/Unreal.ProjectFile` 处的注册表信息，或者自行编写脚本进行切换，脚本的模板请见[附件](https://gotgimhong.github.io/WorkNotes/unreal_engine/windows_engine_registry/registry_template.bat)。
+通常可以直接使用 引擎根目录/Engine/Binaries/Win64 下的 UnrealVersionSelector\.exe 来切换 `HKEY_CLASSES_ROOT/Unreal.ProjectFile` 处的注册表信息，或者自行编写脚本进行切换，脚本的模板请见 [附件](unreal_engine/windows_engine_registry/registry_template.md) 。

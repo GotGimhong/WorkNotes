@@ -354,7 +354,7 @@ RunnableA->Thread = FRunnableThread::Create(RunnableA, TEXT("MyRunnableA"));
 
 ## 完整示例
 
-线程执行主体类的完整示例请见 [MyRunnable.h](https://gotgimhong.github.io/WorkNotes/unreal_engine/thread_runnable/MyRunnable.h) 和 [MyRunnable.cpp](https://gotgimhong.github.io/WorkNotes/unreal_engine/thread_runnable/MyRunnable.cpp) 。
+线程执行主体类的完整示例请见 [附件](unreal_engine/thread_runnable/my_runnable.md) 。
 
 
 ## 参考资料
