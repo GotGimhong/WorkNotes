@@ -3,7 +3,9 @@
 以下是将引擎版本从 4\.27 升级至 5\.0 和 5\.1 时遇到的 API 变更，并不涵盖所有的 API 变更。
 
 
-## UObjectBaseUtility 类
+<details>
+
+<summary>UObjectBaseUtility 类</summary>
 
 `UObjectBaseUtility` 的声明请见 UObjectBaseUtility\.h。
 
@@ -49,8 +51,12 @@
     #endif
     ```
 
+</details>
 
-## UEditorLevelLibrary 类
+
+<details>
+
+<summary>UEditorLevelLibrary 类</summary>
 
 `UEditorLevelLibrary` 的声明请见 EditorLevelLibrary\.h。
 
@@ -81,8 +87,12 @@
 
     被移至 `ULevelEditorSubsystem` 类中，请见 LevelEditorSubsystem\.h。
 
+</details>
 
-## UNiagaraEmitter 类
+
+<details>
+
+<summary>UNiagaraEmitter 类</summary>
 
 `UNiagaraEmitter` 的声明请见 NiagaraEmitter\.h。
 
@@ -117,8 +127,12 @@
 
     从 UE5\.1 开始，该属性被迁移到 `FVersionedNiagaraEmitterData` 结构体中。
 
+</details>
 
-## USkinnedMeshComponent 类
+
+<details>
+
+<summary>USkinnedMeshComponent 类</summary>
 
 `USkinnedMeshComponent` 的声明请见 SkinnedMeshComponent\.h。
 
@@ -149,8 +163,12 @@
     #endif
     ```
 
+</details>
 
-## UObject 类
+
+<details>
+
+<summary>UObject 类</summary>
 
 `UObject` 的声明请见 Object\.h。
 
@@ -166,8 +184,12 @@
     #endif
     ```
 
+</details>
 
-## UUserWidget 类
+
+<details>
+
+<summary>UUserWidget 类</summary>
 
 `UUserWidget` 的声明请见 UserWidget\.h。
 
@@ -187,8 +209,12 @@
     #endif
     ```
 
+</details>
 
-## UDataTable 类
+
+<details>
+
+<summary>UDataTable 类</summary>
 
 `UDataTable` 的声明请见 DataTable\.h。
 
@@ -205,8 +231,12 @@
     #endif
     ```
 
+</details>
 
-## UKismetTextLibrary 类
+
+<details>
+
+<summary>UKismetTextLibrary 类</summary>
 
 `UKismetTextLibrary` 的声明请见 KismetTextLibrary\.h。
 
@@ -224,8 +254,12 @@
     #endif
     ```
 
+</details>
 
-## UTexture2DArray 类
+
+<details>
+
+<summary>UTexture2DArray 类</summary>
 
 `UTexture2DArray` 的声明请见 Texture2DArray\.h。
 
@@ -242,8 +276,12 @@
     #endif
     ```
 
+</details>
 
-## UMaterial 类
+
+<details>
+
+<summary>UMaterial 类</summary>
 
 `UMaterial` 的声明请见 Source/Runtime/Engine/Classes/Materials/Material\.h。
 
@@ -286,8 +324,12 @@
     #endif
     ```
 
+</details>
 
-## UWidget 类
+
+<details>
+
+<summary>UWidget 类</summary>
 
 `UWidget` 的声明请见 Widget\.h。
 
@@ -295,8 +337,12 @@
 
     从 UE5\.1 开始不再支持直接访问，被 `GetVisibility` 和 `SetVisibility` 函数所替代。因为 `GetVisibility` 和 `SetVisibility` 在 UE4 和 UE5 中都有提供，所以不需要做版本兼容。
 
+</details>
 
-## UTextBlock 类
+
+<details>
+
+<summary>UTextBlock 类</summary>
 
 `UTextBlock` 的声明请见 TextBlock\.h。
 
@@ -315,8 +361,12 @@
     #endif
     ```
 
+</details>
 
-## UPackage 类
+
+<details>
+
+<summary>UPackage 类</summary>
 
 `UPackage` 的声明请见 Package\.h。
 
@@ -359,8 +409,12 @@
     #endif
     ```
 
+</details>
 
-## UEditableText 类
+
+<details>
+
+<summary>UEditableText 类</summary>
 
 `UEditableText` 的声明请见 EditableText\.h。
 
@@ -379,8 +433,12 @@
     #endif
     ```
 
+</details>
 
-## UTexture 类
+
+<details>
+
+<summary>UTexture 类</summary>
 
 `UTexture` 的声明请见 Source/Runtime/Engine/Classes/Engine/Texture\.h。
 
@@ -396,8 +454,12 @@
     #endif
     ```
 
+</details>
 
-## UAbilityTask 类
+
+<details>
+
+<summary>UAbilityTask 类</summary>
 
 `UAbilityTask` 的声明请见 AbilityTask\.h。
 
@@ -427,8 +489,12 @@
     #endif
     ```
 
+</details>
 
-## UMultiLineEditableTextBox 类
+
+<details>
+
+<summary>UMultiLineEditableTextBox 类</summary>
 
 `UMultiLineEditableTextBox` 的声明请见 MultiLineEditableTextBox\.h。
 
@@ -447,8 +513,12 @@
     #endif
     ```
 
+</details>
 
-## SMultiLineEditableTextBox 类
+
+<details>
+
+<summary>SMultiLineEditableTextBox 类</summary>
 
 `SMultiLineEditableTextBox` 的声明请见 SMultiLineEditableTextBox\.h。
 
@@ -467,8 +537,12 @@
     #endif
     ```
 
+</details>
 
-## SOverlay 类
+
+<details>
+
+<summary>SOverlay 类</summary>
 
 `SOverlay` 的声明请见 SOverlay\.h。
 
@@ -491,8 +565,12 @@
     #endif
     ```
 
+</details>
 
-## IAssetRegistry 类
+
+<details>
+
+<summary>IAssetRegistry 类</summary>
 
 `IAssetRegistry` 的声明请见 IAssetRegistry\.h。
 
@@ -509,8 +587,12 @@
     #endif
     ```
 
+</details>
 
-## IUnloadedBlueprintData 类
+
+<details>
+
+<summary>IUnloadedBlueprintData 类</summary>
 
 `IUnloadedBlueprintData` 的声明请见 ClassViewerFilter\.h。
 
@@ -528,8 +610,12 @@
     #endif
     ```
 
+</details>
 
-## IStructViewerFilter 类
+
+<details>
+
+<summary>IStructViewerFilter 类</summary>
 
 `IStructViewerFilter` 的声明请见 StructViewerFilter\.h。
 
@@ -545,8 +631,12 @@
     #endif
     ```
 
+</details>
 
-## IEditableTextProperty
+
+<details>
+
+<summary>IEditableTextProperty</summary>
 
 `IEditableTextProperty` 的声明请见 STextPropertyEditableTextBox\.h。
 
@@ -560,8 +650,12 @@
     #endif
     ```
 
+</details>
 
-## 共享指针类
+
+<details>
+
+<summary>共享指针类</summary>
 
 各种共享指针类的声明请见 SharedPointer\.h。
 
@@ -584,8 +678,12 @@ TSharedRef<SWidget> WidgetRef;
 #endif
 ```
 
+</details>
 
-## 容器类
+
+<details>
+
+<summary>容器类</summary>
 
 从 UE5\.0 开始，`TArray`，`TList`，`TSet` 和 `TMap` 这四种常用的泛型容器类型增加了判断容器是否为空的函数 `IsEmpty`。
 
@@ -631,15 +729,23 @@ const TMap<uint8, uint8> Map;
 #endif
 ```
 
+</details>
 
-## FTransform2D 类
+
+<details>
+
+<summary>FTransform2D 类</summary>
 
 `FTransform2D` 类的声明请见 TransformCalculus2D\.h。
 
 从 UE5\.1 开始，`FTransform2D` 重定向至 `FTransform2f` 类，而不再是单独实现的类。
 
+</details>
 
-## FSimpleSlot 类
+
+<details>
+
+<summary>FSimpleSlot 类</summary>
 
 `FSimpleSlot` 的声明请见 Children\.h。
 
@@ -653,8 +759,12 @@ const TMap<uint8, uint8> Map;
 #endif
 ```
 
+</details>
 
-## FEditorStyle 类
+
+<details>
+
+<summary>FEditorStyle 类</summary>
 
 `FEditorStyle` 的声明请见 EditorStyleSet\.h。
 
@@ -669,8 +779,12 @@ const TMap<uint8, uint8> Map;
 #endif
 ```
 
+</details>
 
-## FSlateApplication 类
+
+<details>
+
+<summary>FSlateApplication 类</summary>
 
 `FSlateApplication` 的声明请见 SlateApplication\.h。
 
@@ -707,8 +821,12 @@ const TMap<uint8, uint8> Map;
 
     变化同 `OnTouchStarted` 函数
 
+</details>
 
-## FNiagaraEmitterInstance 类
+
+<details>
+
+<summary>FNiagaraEmitterInstance 类</summary>
 
 `FNiagaraEmitterInstance` 的声明请见 NiagaraEmitterInstance\.h。
 
@@ -725,8 +843,12 @@ const TMap<uint8, uint8> Map;
     #endif
     ```
 
+</details>
 
-## FSlateFontCache 类
+
+<details>
+
+<summary>FSlateFontCache 类</summary>
 
 `FSlateFontCache` 的声明请见 FontCache\.h。
 
@@ -747,8 +869,12 @@ const TMap<uint8, uint8> Map;
     #endif
     ```
 
+</details>
 
-## FKismetCompilerContext 类
+
+<details>
+
+<summary>FKismetCompilerContext 类</summary>
 
 `FKismetCompilerContext` 的声明请见 KismetCompiler\.h。
 
@@ -764,8 +890,12 @@ const TMap<uint8, uint8> Map;
     #endif
     ```
 
+</details>
 
-## 蓝图结构体
+
+<details>
+
+<summary>蓝图结构体</summary>
 
 从 UE5\.0 开始，引擎要求必须为蓝图结构体中的蓝图属性赋予初始值。如果一个蓝图属性没有被赋予初始值，并且它的类型不是对象类型，或者是不含默认构造函数的对象类型，那么引擎在启动后就会在控制台中输出错误。输出的错误是以蓝图属性为单位的，每当检查到一条没有被赋予初始值的蓝图属性，就会输出一条错误。
 
@@ -829,8 +959,12 @@ struct MYPROJECT_API FMyBPStruct
 
 对于所属类型含有默认构造函数的蓝图属性，例如 `FName` 和 `FString`，尽管原则上不需要赋予它们初始值，但还是建议赋予它们初始值。一是和其他蓝图属性保持写法上的统一，二是提升代码的可读性，让其他开发人员更加明确各个蓝图属性被赋予的初始值。
 
+</details>
 
-## FSoftObjectPath 结构体
+
+<details>
+
+<summary>FSoftObjectPath 结构体</summary>
 
 `FSoftObjectPath` 的声明请见 SoftObjectPath\.h。
 
@@ -870,8 +1004,12 @@ struct MYPROJECT_API FMyBPStruct
 
     注意直至 UE5\.2，`FSoftObjectPath` 实际上都尚未提供 `SetAssetPath` 函数，意味着仍然需要使用 `SetAssetPathName` 函数。
 
+</details>
 
-## FPreviewPlatformInfo 结构体
+
+<details>
+
+<summary>FPreviewPlatformInfo 结构体</summary>
 
 `FPreviewPlatformInfo` 的声明请见 EditorEngine\.h。
 
@@ -889,8 +1027,12 @@ struct MYPROJECT_API FMyBPStruct
     #endif
     ```
 
+</details>
 
-## FAssetData 结构体
+
+<details>
+
+<summary>FAssetData 结构体</summary>
 
 `FAssetData` 的声明请见 Source/Runtime/CoreUObject/Public/AssetRegistry/AssetData\.h。
 
@@ -922,8 +1064,12 @@ struct MYPROJECT_API FMyBPStruct
     #endif
     ```
 
+</details>
 
-## FCoreUObjectDelegates 结构体
+
+<details>
+
+<summary>FCoreUObjectDelegates 结构体</summary>
 
 `FCoreUObjectDelegates` 的声明请见 UObjectGlobals\.h。
 
@@ -946,8 +1092,12 @@ struct MYPROJECT_API FMyBPStruct
     #endif
     ```
 
+</details>
 
-## FKeyChain 结构体
+
+<details>
+
+<summary>FKeyChain 结构体</summary>
 
 `FKeyChain` 的声明请见 KeyChainUtilities\.h。
 
@@ -1008,8 +1158,12 @@ struct MYPROJECT_API FMyBPStruct
     #endif
     ```
 
+</details>
 
-## FStaticParameterSet 结构体
+
+<details>
+
+<summary>FStaticParameterSet 结构体</summary>
 
 `FStaticParameterSet` 的声明请见 StaticParameterSet\.h。
 
@@ -1071,8 +1225,12 @@ struct MYPROJECT_API FMyBPStruct
     #endif
     ```
 
+</details>
 
-## FARFilter 结构体
+
+<details>
+
+<summary>FARFilter 结构体</summary>
 
 `FARFilter` 的声明请见 ARFilter\.h。
 
@@ -1089,15 +1247,23 @@ struct MYPROJECT_API FMyBPStruct
     #endif
     ```
 
+</details>
 
-## IsDefaultSubobject 函数
+
+<details>
+
+<summary>IsDefaultSubobject 函数</summary>
 
 `IsDefaultSubobject` 的定义请见 UObjectBaseUtility\.cpp。
 
 此前一个对象只要其 Outer 有效，并且 Outer 不是 CDO，该函数就会返回 true。而从 UE5\.1 开始，该函数的实现有所变化——除了满足前面提到的条件外，目标对象还必须不为 CDO，该函数才会返回 true。换言之，这个函数不能再用于判断一个对象是否为 CDO。
 
+</details>
 
-## SLATE_SUPPORTS_SLOT 宏
+
+<details>
+
+<summary>SLATE_SUPPORTS_SLOT 宏</summary>
 
 `SLATE_SUPPORTS_SLOT` 的定义请见 DeclarativeSyntaxSupport\.h。
 
@@ -1115,8 +1281,12 @@ struct MYPROJECT_API FMyBPStruct
 #endif
 ```
 
+</details>
 
-## ANY_PACKAGE 宏
+
+<details>
+
+<summary>ANY_PACKAGE 宏</summary>
 
 `ANY_PACKAGE` 的定义请见 ObjectMacros\.h。
 
@@ -1136,8 +1306,12 @@ const TCHAR* const ObjectName;
 
 > `ANY_PACKAGE` 本质上是 `reinterpret<UPackage*>(-1)`，并不等价于 `nullptr`，因此 `FindObject<UObject>(ANY_PACKAGE, ObjectName)` 绝对不能改写为 `FindObject<UObject>(nullptr, ObjectName)`；具体请见 `FindObject` 的实现
 
+</details>
 
-## _DebugBreakAndPromptForRemote 宏
+
+<details>
+
+<summary>_DebugBreakAndPromptForRemote 宏</summary>
 
 `_DebugBreakAndPromptForRemote` 的定义请见 AssertionMacros\.h。
 
@@ -1151,8 +1325,12 @@ const TCHAR* const ObjectName;
 #endif
 ```
 
+</details>
 
-## UProperty 相关的宏定义
+
+<details>
+
+<summary>UProperty 相关的宏定义</summary>
 
 从 UE4\.25 开始，各种蓝图属性类型宏定义的前缀从 'U' 改为 'F'，例如 `UProperty` 改为 `FProperty`。这些宏定义在 DefineUPropertyMacros\.h，作用是将 UnrealTypePrivate\.h 中定义的类型重定向至 UnrealType\.h 中定义的类型。DefineUPropertyMacros\.h 从 UE5\.1 开始被删除，意味着从 UE5\.1 开始，直接访问前缀为 'U' 的蓝图属性类型宏定义会出现编译错误。
 
@@ -1166,15 +1344,23 @@ const TCHAR* const ObjectName;
 #endif
 ```
 
+</details>
 
-## AssetRegistryModule.h 文件
+
+<details>
+
+<summary>AssetRegistryModule.h 文件</summary>
 
 从 UE5\.1 开始要求改用 `#include "AssetRegistry/AssetRegistryModule.h"` 而非 `#include "AssetRegistryModule.h"` 的写法来包含这个头文件。请见 Source/Runtime/AssetRegistry/Public/AssetRegistryModule\.h 和 Source/Runtime/AssetRegistry/Public/AssetRegistry/AssetRegistryModule\.h。
 
 实际上，从 UE4 开始，这个头文件就有两份，其中 Source/Runtime/AssetRegistry/Public/AssetRegistryModule\.h 只是为了减小文件包含路径的长度，这个头文件即将被移除，因此需要改为包含 Source/Runtime/AssetRegistry/Public/AssetRegistry/AssetRegistryModule\.h。
 
+</details>
 
-## EditorStyleSettings.h 文件
+
+<details>
+
+<summary>EditorStyleSettings.h 文件</summary>
 
 从 UE5\.1 开始，EditorStyleSettings\.h 文件从 EditorStyle 模块的 Public/Classes 目录移至 UnrealEd 模块的 Classes/Settings 目录。
 
@@ -1188,7 +1374,12 @@ const TCHAR* const ObjectName;
 #endif
 ```
 
-## AssetEditorManager.h
+</details>
+
+
+<details>
+
+<summary>AssetEditorManager.h</summary>
 
 从 UE5\.0 开始，该文件被移除，`FAssetEditorManager` 类也随之被废弃。
 
@@ -1198,3 +1389,4 @@ const TCHAR* const ObjectName;
 #endif
 ```
 
+</details>
