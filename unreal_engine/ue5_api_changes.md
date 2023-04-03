@@ -7,7 +7,7 @@
 
 <summary>UObjectBaseUtility 类</summary>
 
-`UObjectBaseUtility` 的声明请见 UObjectBaseUtility\.h。
+`UObjectBaseUtility` 类的声明请见 UObjectBaseUtility\.h。
 
 + `MarkPendingKill` 函数
 
@@ -58,7 +58,7 @@
 
 <summary>UEditorLevelLibrary 类</summary>
 
-`UEditorLevelLibrary` 的声明请见 EditorLevelLibrary\.h。
+`UEditorLevelLibrary` 类的声明请见 EditorLevelLibrary\.h。
 
 从 UE5\.0 开始，`UEditorLevelLibrary` 中的蓝图函数被移至各个 Subsystem 类中，这里举几个例子： 
 
@@ -87,6 +87,40 @@
 
     被移至 `ULevelEditorSubsystem` 类中，请见 LevelEditorSubsystem\.h。
 
++ `DestroyActor` 函数
+
+    被移至 `UEditorActorSubsystem` 类中，请见 EditorActorSubsystem\.h。
+
++ `SpawnActorFromClass` 函数
+
+    被移至 `UEditorActorSubsystem` 类中，请见 EditorActorSubsystem\.h。
+
+</details>
+
+
+<details>
+
+<summary>UNiagaraComponent 类</summary>
+
+`UNiagaraComponent` 类的声明请见 NiagaraComponent\.h。
+
++ `GetSystemInstance` 函数
+
+    从 UE5\.0 开始被废弃。
+
+    从 UE5\.0 开始，`FNiagaraSystemInstance` 的函数改为通过 `FNiagaraSystemInstanceController` 来调用。注意这并不是指前者的函数被移至后者，而是指后者绑定了前者，通过后者来调用前者的函数。后者是 UE5\.0 新增的类型。
+
+    ```cpp
+    // 以 FNiagaraSystemInstance::IsComplete 函数的调用为例
+
+    UNiagaraComponent* const Component;
+    #if ENGINE_MAJOR_VERSION >= 5
+        const bool bComplete = Component->GetSystemInstanceController()->IsComplete();
+    #else
+        const bool bComplete = Component->GetSystemInstance()->IsComplete();
+    #endif
+    ```
+
 </details>
 
 
@@ -94,13 +128,13 @@
 
 <summary>UNiagaraEmitter 类</summary>
 
-`UNiagaraEmitter` 的声明请见 NiagaraEmitter\.h。
+`UNiagaraEmitter` 类的声明请见 NiagaraEmitter\.h。
 
 + `GetRenderers` 函数
 
     从 UE5\.1 开始，该函数被迁移到 `FVersionedNiagaraEmitterData` 结构体中。后者是 UE5\.1 新增的类型，在 `FNiagaraEmitterInstance` 类中可以通过 `GetCachedEmitterData` 函数来返回。
 
-    `FVersionedNiagaraEmitterData` 的声明请见 NiagaraEmitter\.h，`FNiagaraEmitterInstance` 的声明请见 NiagaraEmitterInstance\.h。
+    `FVersionedNiagaraEmitterData` 结构体的声明请见 NiagaraEmitter\.h，`FNiagaraEmitterInstance` 类的声明请见 NiagaraEmitterInstance\.h。
 
     ```cpp
     const TSharedRef<FNiagaraEmitterInstance> Instance;
@@ -134,7 +168,7 @@
 
 <summary>USkinnedMeshComponent 类</summary>
 
-`USkinnedMeshComponent` 的声明请见 SkinnedMeshComponent\.h。
+`USkinnedMeshComponent` 类的声明请见 SkinnedMeshComponent\.h。
 
 + `SetSkeletalMesh` 函数
 
@@ -170,7 +204,7 @@
 
 <summary>UObject 类</summary>
 
-`UObject` 的声明请见 Object\.h。
+`UObject` 类的声明请见 Object\.h。
 
 + `PreSave` 函数
 
@@ -191,7 +225,7 @@
 
 <summary>UUserWidget 类</summary>
 
-`UUserWidget` 的声明请见 UserWidget\.h。
+`UUserWidget` 类的声明请见 UserWidget\.h。
 
 + `DuplicateAndInitializeFromWidgetTree` 函数
 
@@ -209,6 +243,46 @@
     #endif
     ```
 
++ `GetIsVisible` 函数
+
+    从 UE5\.1 开始被废弃，被 `IsInViewport` 函数所替代。
+
+    在 UE5\.0 及之前的版本中，`IsInViewport` 是 `UUserWidget` 类的成员函数，从 UE5\.1 开始变成 `UWidget` 类的成员函数。因为 `UWidget` 是 `UUserWidget` 的基类，所以这种变化对于 `UUserWidget` 及其派生类是无感的。
+
+    ```cpp
+    UUserWidget* const UserWidget;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能调用 IsInViewport 函数
+        const bool bVisible = UserWidget->IsInViewport();
+    #else
+        // 调用 GetIsVisible 和 IsInViewport 函数皆可
+        {
+            const bool bVisible = UserWidget->GetIsVisible();
+        }
+        {
+            const bool bVisible = UserWidget->IsInViewport();
+        }
+    #endif
+    ```
+
++ `RemoveFromViewport` 函数
+
+    从 UE5\.1 开始被废弃，被 `RemoveFromParent` 函数所替代。
+
+    因为从 UE4 开始，`UUserWidget` 类就提供了 `RemoveFromParent` 函数的定义，并且 `RemoveFromViewport` 函数的实现在 UE4 和 UE5 中是相同的，所以可以直接改用 `RemoveFromParent` 函数。
+
+    ```cpp
+    UUserWidget* const UserWidget;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 RemoveFromParent
+        UserWidget->RemoveFromParent();
+    #else
+        // 使用 RemoveFromParent 和 RemoveFromViewport 皆可，两者等价
+        UserWidget->RemoveFromParent();
+        UserWidget->RemoveFromViewport();
+    #endif
+    ```
+
 </details>
 
 
@@ -216,7 +290,7 @@
 
 <summary>UDataTable 类</summary>
 
-`UDataTable` 的声明请见 DataTable\.h。
+`UDataTable` 类的声明请见 DataTable\.h。
 
 + `GetRowStructName` 函数
 
@@ -238,7 +312,7 @@
 
 <summary>UKismetTextLibrary 类</summary>
 
-`UKismetTextLibrary` 的声明请见 KismetTextLibrary\.h。
+`UKismetTextLibrary` 类的声明请见 KismetTextLibrary\.h。
 
 + `Conv_FloatToText` 函数
 
@@ -261,7 +335,7 @@
 
 <summary>UTexture2DArray 类</summary>
 
-`UTexture2DArray` 的声明请见 Texture2DArray\.h。
+`UTexture2DArray` 类的声明请见 Texture2DArray\.h。
 
 + `InvadiateTextureSource` 函数
 
@@ -283,7 +357,7 @@
 
 <summary>UMaterial 类</summary>
 
-`UMaterial` 的声明请见 Source/Runtime/Engine/Classes/Materials/Material\.h。
+`UMaterial` 类的声明请见 Source/Runtime/Engine/Classes/Materials/Material\.h。
 
 + `EditorComments`，`Expressions`，`ExpressionExecBegin`，`ExpressionExecEnd` 和 `ExpressionCollection` 属性
 
@@ -331,7 +405,7 @@
 
 <summary>UWidget 类</summary>
 
-`UWidget` 的声明请见 Widget\.h。
+`UWidget` 类的声明请见 Widget\.h。
 
 + `Visibility` 属性
 
@@ -344,20 +418,377 @@
 
 <summary>UTextBlock 类</summary>
 
-`UTextBlock` 的声明请见 TextBlock\.h。
+`UTextBlock` 类的声明请见 TextBlock\.h。
+
++ `Text` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetText` 和 `SetText` 函数所替代。
+
+    因为从 UE4 开始 `UTextBlock` 类就提供了 `GetText` 和 `SetText` 函数的定义，所以可以直接改用函数。
+
+    ```cpp
+    UTextBlock* const TextBlock;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 GetText 和 SetText 函数
+        const FText& Text = TextBlock->GetText();
+        TextBlock->SetText(Text);
+    #else
+        // 可以使用 GetText 和 SetText 函数，或者直接访问 Text 属性
+        {
+            const FText& Text = TextBlock->GetText();
+            TextBlock->SetText(Text);
+        }
+        {
+            const FText& Text = TextBlock->Text;
+            TextBlock->Text = Text;
+        }
+    #endif
+    ```
 
 + `Font` 属性
 
     从 UE5\.1 开始不再支持直接访问，被 `GetFont` 和 `SetFont` 函数所替代。
 
+    `UTextBlock` 类从 UE4 开始就提供了 `SetFont` 函数的定义，但是从 UE5\.1 开始才提供 `GetFont` 函数的定义。
+
     ```cpp
     UTextBlock* const TextBlock;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 GetFont 和 SetFont 函数
         const FSlateFontInfo& Font = TextBlock->GetFont();
         TextBlock->SetFont(Font);
     #else
+        // 可以使用 SetFont 函数，或者直接访问 Font 属性
         const FSlateFontInfo& Font = TextBlock->Font;
+        TextBlock->SetFont(Font);
         TextBlock->Font = Font;
+    #endif
+    ```
+
++ `ColorAndOpacity` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetColorAndOpacity` 和 `SetColorAndOpacity` 函数所替代。
+
+    与 `Font` 属性的情况相同，`UTextBlock` 类从 UE4 开始就提供了 `SetColorAndOpacity` 函数的定义，但是从 UE5\.1 开始才提供 `GetColorAndOpacity` 函数的定义。
+
++ `StrikeBrush` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetStrikeBrush` 和 `SetStrikeBrush` 函数所替代。
+
+    与 `Font` 属性的情况相同，`UTextBlock` 类从 UE4 开始就提供了 `SetStrikeBrush` 函数的定义，但是从 UE5\.1 开始才提供 `GetStrikeBrush` 函数的定义。
+
++ `ShadowOffset` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetShadowOffset` 和 `SetShadowOffset` 函数所替代。
+
+    与 `Font` 属性的情况相同，`UTextBlock` 类从 UE4 开始就提供了 `SetShadowOffset` 函数的定义，但是从 UE5\.1 开始才提供 `GetShadowOffset` 函数的定义。
+
++ `ShadowColorAndOpacity` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetShadowColorAndOpacity` 和 `SetShadowColorAndOpacity` 函数所替代。
+
+    与 `Font` 属性的情况相同，`UTextBlock` 类从 UE4 开始就提供了 `SetShadowColorAndOpacity` 函数的定义，但是从 UE5\.1 开始才提供 `GetShadowColorAndOpacity` 函数的定义。
+
++ `MinDesiredWidth` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetMinDesiredWidth` 和 `SetMinDesiredWidth` 函数所替代。
+
+    与 `Font` 属性的情况相同，`UTextBlock` 类从 UE4 开始就提供了 `SetMinDesiredWidth` 函数的定义，但是从 UE5\.1 开始才提供 `GetMinDesiredWidth` 函数的定义。
+
++ `TextTransformPolicy` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetTextTransformPolicy` 和 `SetTextTransformPolicy` 函数所替代。
+
+    与 `Font` 属性的情况相同，`UTextBlock` 类从 UE4 开始就提供了 `SetTextTransformPolicy` 函数的定义，但是从 UE5\.1 开始才提供 `GetTextTransformPolicy` 函数的定义。
+
++ `TextOverflowPolicy` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetTextOverflowPolicy` 和 `SetTextOverflowPolicy` 函数所替代。
+
+    与 `Font` 属性的情况相同，`UTextBlock` 类从 UE4 开始就提供了 `SetTextOverflowPolicy` 函数的定义，但是从 UE5\.1 开始才提供 `GetTextOverflowPolicy` 函数的定义。
+
+</details>
+
+
+<details>
+
+<summary>UEditableText 类</summary>
+
+`UEditableText` 类的声明请见 EditableText\.h。
+
++ `Text` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetText` 和 `SetText` 函数所替代。
+
+    因为从 UE4 开始 `UEditableText` 类就提供了 `GetText` 和 `SetText` 函数的定义，所以可以直接改用函数。
+
+    ```cpp
+    UEditableText* const EditableText;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 GetText 和 SetText 函数
+        const FText& Text = EditableText->GetText();
+        EditableText->SetText(Text);
+    #else
+        // 可以直接访问 Text 属性或者使用函数
+        {
+            const FText& Text = EditableText->Text;
+            EditableText->Text = Text;
+        }
+        {
+            const FText& Text = EditableText->GetText();
+            EditableText->SetText(Text);
+        }
+    #endif
+    ```
+
++ `HintText` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetHintText` 和 `SetHintText` 函数所替代。
+
+    `UEditableText` 类从 UE4 开始提供 `SetHintText` 函数的定义，从 UE5\.1 开始提供 `GetHintText` 函数的定义。
+
+    ```cpp
+    UEditableText* const EditableText;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        const FText& HintText = EditableText->GetHintText();
+        EditableText->SetHintText(HintText);
+    #else
+        const FText& HintText = EditableText->HintText;
+        // 可以直接访问 HintText 属性或者使用 SetHintText 函数
+        EditableText->HintText = HintText;
+        EditableText->SetHintText(HintText);
+    #endif
+    ```
+
++ `IsReadOnly` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetIsReadOnly` 和 `SetIsReadOnly` 函数所替代。
+
+    `UEditableText` 类从 UE4 开始提供 `SetIsReadOnly` 函数的定义，从 UE5\.1 开始提供 `GetIsReadOnly` 函数的定义。
+
++ `ClearKeyboardFocusOnCommit` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetClearKeyboardFocusOnCommit` 和 `SetClearKeyboardFocusOnCommit` 函数所替代。
+
+    `UEditableText` 类从 UE4 开始提供 `SetClearKeyboardFocusOnCommit` 函数的定义，从 UE5\.1 开始提供 `GetClearKeyboardFocusOnCommit` 函数的定义。
+
++ `Justification` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetJustification` 和 `SetJustification` 函数所替代。
+
+    `UEditableText` 类从 UE4 开始提供 `SetJustification` 函数的定义，从 UE5\.1 开始提供 `GetJustification` 函数的定义。
+
++ `OverflowPolicy` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetTextOverflowPolicy` 和 `SetTextOverflowPolicy` 函数所替代。
+
+    `UEditableText` 类从 UE5\.0 开始提供 `SetTextOverflowPolicy` 函数的定义，从 UE5\.1 开始提供 `GetTextOverflowPolicy` 函数的定义。
+
++ `MinimumDesiredWidth` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetMinimumDesiredWidth` 和 `SetMinimumDesiredWidth` 函数所替代。
+
+    ```cpp
+    UEditableText* const EditableText;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        const float MinimumDesiredWidth = EditableText->GetMinimumDesiredWidth();
+        EditableText->SetMinimumDesiredWidth(MinimumDesiredWidth);
+    #else
+        const float MinimumDesiredWidth = EditableText->MinimumDesiredWidth;
+        EditableText->MinimumDesiredWidth = MinimumDesiredWidth;
+    #endif
+    ```
+
++ `IsCaretMovedWhenGainFocus` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetIsCaretMovedWhenGainFocus` 和 `SetIsCaretMovedWhenGainFocus` 函数所替代。
+
++ `SelectAllTextWhenFocused` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetSelectAllTextWhenFocused` 和 `SetSelectAllTextWhenFocused` 函数所替代。
+
++ `RevertTextOnEscape` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetRevertTextOnEscape` 和 `SetRevertTextOnEscape` 函数所替代。
+
++ `SelectAllTextOnCommit` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetSelectAllTextOnCommit` 和 `SetSelectAllTextOnCommit` 函数所替代。
+
+</details>
+
+
+<details>
+
+<summary>UEditableTextBox 类</summary>
+
+`UEditableTextBox` 类的声明请见 EditableTextBox\.h。
+
++ `Text` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetText` 和 `SetText` 函数所替代。
+
+    因为从 UE4 开始 `UEditableTextBox` 类就提供了 `GetText` 和 `SetText` 函数的定义，所以可以直接改用函数。
+
++ `HintText` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetHintText` 和 `SetHintText` 函数所替代。
+
+    `UEditableTextBox` 类从 UE4 开始提供 `SetHintText` 函数的定义，从 UE5\.1 开始提供 `GetHintText` 函数的定义。
+
++ `IsReadOnly` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetIsReadOnly` 和 `SetIsReadOnly` 函数所替代。
+
+    `UEditableTextBox` 类从 UE4 开始提供 `SetIsReadOnly` 函数的定义，从 UE5\.1 开始提供 `GetIsReadOnly` 函数的定义。
+
++ `IsPassword` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetIsPassword` 和 `SetIsPassword` 函数所替代。
+
+    `UEditableTextBox` 类从 UE4 开始提供 `SetIsPassword` 函数的定义，从 UE5\.1 开始提供 `GetIsPassword` 函数的定义。
+
++ `Justification` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetJustification` 和 `SetJustification` 函数所替代。
+
+    `UEditableTextBox` 类从 UE4 开始提供 `SetJustification` 函数的定义，从 UE5\.1 开始提供 `GetJustification` 函数的定义。
+
++ `OverflowPolicy` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetTextOverflowPolicy` 和 `SetTextOverflowPolicy` 函数所替代。
+
+    `UEditableTextBox` 类从 UE5\.0 开始提供 `SetTextOverflowPolicy` 函数的定义，从 UE5\.1 开始提供 `GetTextOverflowPolicy` 函数的定义。
+
++ `MinimumDesiredWidth` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetMinimumDesiredWidth` 和 `SetMinDesiredWidth`（注意不是 `SetMinimumDesiredWidth`）函数所替代。
+
++ `IsCaretMovedWhenGainFocus` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetIsCaretMovedWhenGainFocus` 和 `SetIsCaretMovedWhenGainFocus` 函数所替代。
+
++ `SelectAllTextWhenFocused` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetSelectAllTextWhenFocused` 和 `SetSelectAllTextWhenFocused` 函数所替代。
+
++ `RevertTextOnEscape` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetRevertTextOnEscape` 和 `SetRevertTextOnEscape` 函数所替代。
+
++ `ClearKeyboardFocusOnCommit` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetClearKeyboardFocusOnCommit` 和 `SetClearKeyboardFocusOnCommit` 函数所替代。
+
++ `SelectAllTextOnCommit` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetSelectAllTextOnCommit` 和 `SetSelectAllTextOnCommit` 函数所替代。
+
+</details>
+
+
+<details>
+
+<summary>UMultiLineEditableText 类</summary>
+
+`UMultiLineEditableText` 类的声明请见 MultiLineEditableText\.h。
+
++ `Text` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetText` 和 `SetText` 函数所替代。
+
+    因为从 UE4 开始 `UMultiLineEditableText` 类就提供了 `GetText` 和 `SetText` 函数的定义，所以可以直接改用函数。
+
++ `HintText` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetHintText` 和 `SetHintText` 函数所替代。
+
+    因为从 UE4 开始 `UMultiLineEditableText` 类就提供了 `GetHintText` 和 `SetHintText` 函数的定义，所以可以直接改用函数。
+
++ `bIsReadOnly` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetIsReadOnly` 和 `SetIsReadOnly` 函数所替代。
+
+    `UMultiLineEditableText` 类从 UE4 开始提供 `SetIsReadOnly` 函数的定义，从 UE5\.1 开始提供 `GetIsReadOnly` 函数的定义。
+
++ `SelectAllTextWhenFocused` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetSelectAllTextWhenFocused` 和 `SetSelectAllTextWhenFocused` 函数所替代。
+
++ `ClearTextSelectionOnFocusLoss` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetClearTextSelectionOnFocusLoss` 和 `SetClearTextSelectionOnFocusLoss` 函数所替代。
+
++ `RevertTextOnEscape` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetRevertTextOnEscape` 和 `SetRevertTextOnEscape` 函数所替代。
+
++ `ClearKeyboardFocusOnCommit` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetClearKeyboardFocusOnCommit` 和 `SetClearKeyboardFocusOnCommit` 函数所替代。
+
+</details>
+
+
+<details>
+
+<summary>UMultiLineEditableTextBox 类</summary>
+
+`UMultiLineEditableTextBox` 类的声明请见 MultiLineEditableTextBox\.h。
+
++ `TextStyle` 属性
+
+    从 UE5\.1 开始被废弃，其功能被整合在 `WidgetStyle` 属性中。
+
+    ```cpp
+    UMultiLineEditableTextBox* const TextBox;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        const FTextBlockStyle& TextStyle = TextBox->WidgetStyle.TextStyle;
+        TextBox->WidgetStyle.TextStyle = TextStyle;
+    #else
+        const FTextBlockStyle& TextStyle = TextBox->TextStyle;
+        TextBox->TextStyle = TextStyle;
+    #endif
+    ```
+
++ `Text` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetText` 和 `SetText` 函数所替代。
+
+    因为从 UE4 开始 `UMultiLineEditableTextBox` 类就提供了 `GetText` 和 `SetText` 函数的定义，所以可以直接改用函数。
+
++ `HintText` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetHintText` 和 `SetHintText` 函数所替代。
+
+    因为从 UE4 开始 `UMultiLineEditableTextBox` 类就提供了 `GetHintText` 和 `SetHintText` 函数的定义，所以可以直接改用函数。
+
++ `bIsReadOnly` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetIsReadOnly` 和 `SetIsReadOnly` 函数所替代。
+
+    `UMultiLineEditableTextBox` 类从 UE4 开始提供 `SetIsReadOnly` 函数的定义，从 UE5\.1 开始提供 `GetIsReadOnly` 函数的定义。
+
+</details>
+
+
+<details>
+
+<summary>UImage 类</summary>
+
+`UImage` 类的声明请见 Source/Runtime/UMG/Public/Components/Image\.h。
+
++ `SetBrushSize` 函数
+
+    从 UE5\.0 开始被废弃，被新增的 `SetDesiredSizeOverride` 函数所替代。
+
+    ```cpp
+    UImage* const Image;
+    const FVector2D DesiredSize;
+    #if ENGINE_MAJOR_VERSION >= 5
+        Image->SetDesiredSizeOverride(DesiredSize);
+    #else
+        Image->SetBrushSize(DesiredSize);
     #endif
     ```
 
@@ -366,9 +797,245 @@
 
 <details>
 
+<summary>UCheckBox 类</summary>
+
+`UCheckBox` 类的声明请见 CheckBox\.h。
+
++ `CheckedState` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetCheckedState` 和 `SetCheckedState` 函数所替代。
+
+    因为从 UE4 开始 `UCheckBox` 类就提供了 `GetCheckedState` 和 `SetCheckedState` 函数的定义，所以可以直接改用函数。
+
+    ```cpp
+    UCheckBox* const CheckBox;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 GetCheckedState 和 SetCheckedState 函数
+        const ECheckBoxState& CheckedState = CheckBox->GetCheckedState();
+        CheckBox->SetCheckedState(CheckedState);
+    #else
+        // 可以使用 GetCheckedState 和 SetCheckedState 函数，或者直接访问 CheckedState 属性
+        {
+            const ECheckBoxState& CheckedState = CheckBox->GetCheckedState();
+            CheckBox->SetCheckedState(CheckedState);
+        }
+        {
+            const ECheckBoxState& CheckedState = CheckBox->CheckedState;
+            CheckBox->CheckedState = CheckedState;
+        }
+    #endif
+    ```
+
++ `WidgetStyle` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetWidgetStyle` 和 `SetWidgetStyle` 函数所替代。
+
+    ```cpp
+    UCheckBox* const CheckBox;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        const FCheckBoxStyle& WidgetStyle = CheckBox->GetWidgetStyle();
+        CheckBox->SetWidgetStyle(WidgetStyle);
+    #else
+        const FCheckBoxStyle& WidgetStyle = CheckBox->WidgetStyle;
+        CheckBox->WidgetStyle = WidgetStyle;
+    #endif
+    ```
+
++ `ClickMethod` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetClickMethod` 和 `SetClickMethod` 函数所替代。
+
+    `UCheckBox` 类从 UE4 开始就提供了 `SetClickMethod` 函数的定义，但是从 UE5\.1 开始才提供 `GetClickMethod` 函数的定义。
+
+    ```cpp
+    UCheckBox* const CheckBox;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 GetClickMethod 和 SetClickMethod 函数
+        const EButtonClickMethod::Type& ClickMethod = CheckBox->GetClickMethod();
+        CheckBox->SetClickMethod(ClickMethod);
+    #else
+        // 可以使用 SetClickMethod 函数，或者直接访问 ClickMethod 属性
+        const EButtonClickMethod::Type& ClickMethod = CheckBox->ClickMethod;
+        CheckBox->SetClickMethod(ClickMethod);
+        CheckBox->ClickMethod = ClickMethod;
+    #endif
+    ```
+
++ `TouchMethod` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetTouchMethod` 和 `SetTouchMethod` 函数所替代。
+
+    与 `ClickMethod` 属性的情况相同，`UCheckBox` 类从 UE4 开始就提供了 `SetTouchMethod` 函数的定义，但是从 UE5\.1 开始才提供 `GetTouchMethod` 函数的定义。
+
++ `PressMethod` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetPressMethod` 和 `SetPressMethod` 函数所替代。
+
+    与 `ClickMethod` 属性的情况相同，`UCheckBox` 类从 UE4 开始就提供了 `SetPressMethod` 函数的定义，但是从 UE5\.1 开始才提供 `GetPressMethod` 函数的定义。
+
+</details>
+
+
+<details>
+
+<summary>UThrobber 类</summary>
+
+`UThrobber` 类的声明请见 Throbber\.h。
+
++ `NumberOfPieces` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetNumberOfPieces` 和 `SetNumberOfPieces` 函数所替代。
+
+    `UThrobber` 类从 UE4 开始提供 `SetNumberOfPieces` 函数的定义，从 UE5\.1 开始提供 `GetNumberOfPieces` 函数的定义。
+
+    ```cpp
+    UThrobber* const Throbber;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 GetNumberOfPieces 和 SetNumberOfPieces 函数
+        const int32 NumberOfPieces = Throbber->GetNumberOfPieces();
+        Throbber->SetNumberOfPieces(NumberOfPieces);
+    #else
+        // 可以使用 SetNumberOfPieces 函数，或者直接访问 NumberOfPieces 属性
+        const int32 NumberOfPieces = Throbber->NumberOfPieces;
+        Throbber->SetNumberOfPieces(NumberOfPieces);
+        Throbber->NumberOfPieces = NumberOfPieces;
+    #endif
+    ```
+
++ `bAnimateHorizontally` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetAnimateHorizontally` 和 `SetAnimateHorizontally` 函数所替代。
+
+    `UThrobber` 类从 UE4 开始提供 `SetAnimateHorizontally` 函数的定义，从 UE5\.1 开始提供 `GetAnimateHorizontally` 函数的定义。
+
++ `bAnimateVertically` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetAnimateVertically` 和 `SetAnimateVertically` 函数所替代。
+
+    `UThrobber` 类从 UE4 开始提供 `SetAnimateVertically` 函数的定义，从 UE5\.1 开始提供 `GetAnimateVertically` 函数的定义。
+
++ `bAnimateOpacity` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetAnimateOpacity` 和 `SetAnimateOpacity` 函数所替代。
+
+    `UThrobber` 类从 UE4 开始提供 `SetAnimateOpacity` 函数的定义，从 UE5\.1 开始提供 `GetAnimateOpacity` 函数的定义。
+
++ `Image` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被新增的 `GetImage` 和 `SetImage` 函数所替代。
+
+    ```cpp
+    UThrobber* const Throbber;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        const FSlateBrush& Image = Throbber->GetImage();
+        Throbber->SetImage(Image);
+    #else
+        const FSlateBrush& Image = Throbber->Image;
+        Throbber->Image = Image;
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
+<summary>UCanvasPanelSlot 类</summary>
+
+`UCanvasPanelSlot` 类的声明请见 CanvasPanelSlot\.h。
+
++ `LayoutData` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetLayout` 和 `SetLayout` 函数所替代。
+
+    因为从 UE4 开始 `UCanvasPanelSlot` 就提供了 `GetLayout` 和 `SetLayout` 函数的定义，所以可以直接改用函数。
+
+    ```cpp
+    UCanvasPanelSlot* const Slot;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 GetLayout 和 SetLayout 函数
+        const FAnchorData& LayoutData = Slot->GetLayout();
+        Slot->SetLayout(LayoutData);
+    #else
+        // 可以直接访问 LayoutData 属性或者使用函数
+        {
+            const FAnchorData& LayoutData = Slot->LayoutData;
+            Slot->LayoutData = LayoutData;
+        }
+        {
+            const FAnchorData& LayoutData = Slot->GetLayout();
+            Slot->SetLayout(LayoutData);
+        }
+    #endif
+    ```
+
++ `bAutoSize` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetAutoSize` 和 `SetAutoSize` 函数所替代。
+
+    与 `LayoutData` 属性的情况相同，从 UE4 开始 `UCanvasPanelSlot` 就提供了 `GetAutoSize` 和 `SetAutoSize` 函数的定义。
+
++ `ZOrder` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetZOrder` 和 `SetZOrder` 函数所替代。
+
+    与 `LayoutData` 属性的情况相同，从 UE4 开始 `UCanvasPanelSlot` 就提供了 `GetZOrder` 和 `SetZOrder` 函数的定义。
+
+</details>
+
+
+<details>
+
+<summary>UUniformGridSlot 类</summary>
+
+`UUniformGridSlot` 类的声明请见 UniformGridSlot\.h。
+
++ `HorizontalAlignment` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetHorizontalAlignment` 和 `SetHorizontalAlignment` 函数所替代。
+
+    `UUniformGridSlot` 类从 UE4 开始提供 `SetHorizontalAlignment` 函数的定义，从 UE5\.1 开始提供 `GetHorizontalAlignment` 函数的定义。
+
+    ```cpp
+    UUniformGridSlot* const Slot;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 只能使用 GetHorizontalAlignment 和 SetHorizontalAlignment 函数
+        const EHorizontalAlignment HorizontalAlignment = Slot->GetHorizontalAlignment();
+        Slot->SetHorizontalAlignment(HorizontalAlignment);
+    #else
+        // 可以使用 SetHorizontalAlignment 函数，或者直接访问 HorizontalAlignment 属性
+        const EHorizontalAlignment HorizontalAlignment = Slot->HorizontalAlignment;
+        Slot->SetHorizontalAlignment(HorizontalAlignment);
+        Slot->HorizontalAlignment = HorizontalAlignment;
+    #endif
+    ```
+
++ `VerticalAlignment` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetVerticalAlignment` 和 `SetVerticalAlignment` 函数所替代。
+
+    `UUniformGridSlot` 类从 UE4 开始提供 `SetVerticalAlignment` 函数的定义，从 UE5\.1 开始提供 `GetVerticalAlignment` 函数的定义。
+
++ `Row` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetRow` 和 `SetRow` 函数所替代。
+
+    `UUniformGridSlot` 类从 UE4 开始提供 `SetRow` 函数的定义，从 UE5\.1 开始提供 `GetRow` 函数的定义。
+
++ `Column` 属性
+
+    从 UE5\.1 开始不再支持直接访问，被 `GetColumn` 和 `SetColumn` 函数所替代。
+
+    `UUniformGridSlot` 类从 UE4 开始提供 `SetColumn` 函数的定义，从 UE5\.1 开始提供 `GetColumn` 函数的定义。
+
+</details>
+
+
+<details>
+
 <summary>UPackage 类</summary>
 
-`UPackage` 的声明请见 Package\.h。
+`UPackage` 类的声明请见 Package\.h。
 
 + `FileName` 属性
 
@@ -409,29 +1076,37 @@
     #endif
     ```
 
-</details>
++ `PreSavePackageEvent` 属性
 
-
-<details>
-
-<summary>UEditableText 类</summary>
-
-`UEditableText` 的声明请见 EditableText\.h。
-
-+ `HintText` 属性
-
-    从 UE5\.1 开始不再支持直接访问，被 `GetHintText` 和 `SetHintText` 函数所替代。
+    从 UE5\.0 开始被废弃，被新增的 `PreSavePackageWithContextEvent` 属性所替代。注意回调的参数列表有所变化。
 
     ```cpp
-    UEditableText* const EditableText;
-    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
-        const FText& HintText = EditableText->GetHintText();
-        EditableText->SetHintText(HintText);
+    #if ENGINE_MAJOR_VERSION >= 5
+        void UMyObject::RegisterDelegates()
+        {
+            PreSavePackageHandle = UPackage::PreSavePackageWithContextEvent.AddUObject(this, &UMyObject::OnPreSavePackage);
+        }
+
+        void UMyObject::OnPreSavePackage(UPackage* const Package, const FObjectPreSaveContext Context)
+        {
+            // ...
+        }
     #else
-        const FText& HintText = EditableText->HintText;
-        EditableText->HintText =HintText;
+        void UMyObject::RegisterDelegates()
+        {
+            PreSavePackageHandle = UPackage::PreSavePackageEvent.AddUObject(this, &UMyObject::OnPreSavePackage);
+        }
+
+        void UMyObject::OnPreSavePackage(UPackage* const Package)
+        {
+            // ...
+        }
     #endif
     ```
+
++ `PackageSavedEvent` 属性
+
+    从 UE5\.0 开始被废弃，被新增的 `PackageSavedWithContextEvent` 属性所替代。注意回调的参数列表有所变化。
 
 </details>
 
@@ -440,7 +1115,7 @@
 
 <summary>UTexture 类</summary>
 
-`UTexture` 的声明请见 Source/Runtime/Engine/Classes/Engine/Texture\.h。
+`UTexture` 类的声明请见 Source/Runtime/Engine/Classes/Engine/Texture\.h。
 
 + `bDitherMipMapAlpha` 属性
 
@@ -459,9 +1134,35 @@
 
 <details>
 
+<summary>UTexture2D 类</summary>
+
+`UTexture2D` 类的声明请见 Texture2D\.h。
+
++ `PlatformData` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被 `GetPlatformData` 和 `SetPlatformData` 函数所替代。后两者是 UE5\.0 新增的函数。
+
+    另外，`UTexture2D` 类以指针形式引用 `FTexturePlatformData` 类型的数据，并且不负责维护其生命周期。这就意味着 `FTexturePlatformData` 类型的数据需要在外部动态创建并且管理生命周期，以免内存泄漏。
+
+    ```cpp
+    UTexture2D* const Texture;
+    #if ENGINE_MAJOR_VERSION >= 5
+        FTexturePlatformData* const Data = Texture->GetPlatformData();
+        Texture->SetPlatformData(Data);
+    #else
+        FTexturePlatformData* const Data = Texture->PlatformData;
+        Texture->PlatformData = Data;
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
 <summary>UAbilityTask 类</summary>
 
-`UAbilityTask` 的声明请见 AbilityTask\.h。
+`UAbilityTask` 类的声明请见 AbilityTask\.h。
 
 + `Ability` 属性
 
@@ -494,22 +1195,103 @@
 
 <details>
 
-<summary>UMultiLineEditableTextBox 类</summary>
+<summary>UAnimSequenceBase 类</summary>
 
-`UMultiLineEditableTextBox` 的声明请见 MultiLineEditableTextBox\.h。
+`UAnimSequenceBase` 类的声明请见 AnimSequenceBase\.h。
 
-+ `TextStyle` 属性
++ `SequenceLength` 属性
 
-    从 UE5\.1 开始被废弃，其功能被整合在 `WidgetStyle` 属性中。
+    从 UE5\.0 开始不再支持直接访问，被 `GetPlayLength` 和 `UAnimDataController` 类的 `SetPlayLength` 函数所替代。其中 `UAnimDataController` 类及其基类 `IAnimationDataController` 是 UE5\.0 新增的类型。
 
     ```cpp
-    UMultiLineEditableTextBox* const TextBox;
-    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
-        const FTextBlockStyle& TextStyle = TextBox->WidgetStyle.TextStyle;
-        TextBox->WidgetStyle.TextStyle = TextStyle;
+    UAnimSequenceBase* const AnimSequence;
+
+    // Get 方法一
+    {
+        const float SequenceLength = AnimSequence->SequenceLength;
+    }
+    // Get 方法二：因为 GetPlayLength 函数在 UE4 中也有定义，所以不需要适配
+    {
+        const float SequenceLength = AnimSequence->GetPlayLength();
+    }
+
+    // Set 方法需要适配
+    #if ENGINE_MAJOR_VERSION >= 5
+        if (IAnimationDataController* const Controller = AnimSequence->GetController())
+        {
+            Controller->SetPlayLength(1.0f);
+        }
     #else
-        const FTextBlockStyle& TextStyle = TextBox->TextStyle;
-        TextBox->TextStyle = TextStyle;
+        AnimSequence->SequenceLength = 1.0f;
+    #endif
+    ```
+
++ `SetSequenceLength` 函数
+
+    从 UE5\.0 开始被废弃，被 `UAnimDataController` 类的 `SetPlayLength` 函数所替代。
+
++ `GetNumberOfFrames` 函数
+
+    从 UE5\.0 开始被废弃，被新增的 `GetNumberOfSampledKeys` 函数所替代。
+
+    请注意，引擎将 `GetNumberOfFrames` 函数的废弃版本标记为 4\.19，这是错误的。实际上直至 UE4 的最后一个版本 4\.27，该函数仍未被标记为废弃。
+
+    ```cpp
+    UAnimSequenceBase* const AnimSequence;
+    #if ENGINE_MAJOR_VERSION >= 5
+        const int32 Number = AnimSequence->GetNumberOfSampledKeys();
+    #else
+        const int32 Number = AnimSequence->GetNumberOfFrames();
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
+<summary>UInstancedStaticMeshComponent 类</summary>
+
+`UInstancedStaticMeshComponent` 类的声明请见 InstancedStaticMeshComponent\.h。
+
++ `AddInstanceWorldSpace` 函数
+
+    从 UE5\.0 开始被废弃，被 `AddInstance` 函数所替代。
+
+    尽管从 UE4 开始 `UInstancedStaticMeshComponent` 类就提供了 `AddInstance` 函数的定义，但是不能无视引擎版本统一改用 `AddInstance`，因为 `AddInstanceWorldSpace` 在 UE4 和 UE5 中的实现是不同的。
+
+    ```cpp
+    UInstancedStaticMeshComponent* const Component;
+    const FTransform InstanceTransform;
+    #if ENGINE_MAJOR_VERSION >= 5
+        const int32 InstanceIndex = Component->AddInstance(InstanceTransform, true /** bWorldSpace */);
+    #else
+        const int32 InstanceIndex = Component->AddInstanceWorldSpace(InstanceTransform);
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
+<summary>ARecastNavMesh 类</summary>
+
+`ARecastNavMesh` 类的声明请见 RecastNavMesh\.h。
+
++ `GetDebugGeometry` 函数
+
+    从 UE5\.1 开始被废弃，被新增的 `GetDebugGeometryForTitle` 函数所替代。
+
+    ```cpp
+    ARecastNavMesh* const NavMesh;
+    FRecastDebugGeometry Geometry;
+    const int32 TileIndex;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 参数列表不变，增加了一个返回值
+        const bool bSuccessful = NavMesh->GetDebugGeometryForTile(Geometry, TileIndex);
+    #else
+        NavMesh->GetDebugGeometry(Geometry, TileIndex);
     #endif
     ```
 
@@ -520,7 +1302,7 @@
 
 <summary>SMultiLineEditableTextBox 类</summary>
 
-`SMultiLineEditableTextBox` 的声明请见 SMultiLineEditableTextBox\.h。
+`SMultiLineEditableTextBox` 类的声明请见 SMultiLineEditableTextBox\.h。
 
 + `TextStyle` 属性
 
@@ -542,9 +1324,150 @@
 
 <details>
 
+<summary>SWidget 类</summary>
+
+`SWidget` 类的声明请见 SWidget\.h。
+
++ `InvalidatePrepass` 函数
+
+    从 UE5\.0 开始被废弃，被新增的 `MarkPrepassAsDirty` 函数所替代。
+
+    根据引擎的注释，还可以使用 `Invalidate` 函数作为替代，其中参数要求是 `EInvalidateWidgetReason::Prepass`。不过根据代码的实现，这种做法不完全等价于调用 `InvalidatePrepass` 函数，因此还是建议使用 `MarkPrepassAsDirty` 函数，它是完全等价于 `InvalidatePrepass` 函数的。
+
+    ```cpp
+    const TSharedRef<SWidget> Widget;
+    #if ENGINE_MAJOR_VERSION >= 5
+        Widget->MarkPrepassAsDirty();
+    #else
+        Widget->InvalidatePrepass();
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
+<summary>SConstraintCanvas::FSlot 类</summary>
+
+`SConstraintCanvas::FSlot` 类的声明请见 SConstraintCanvas\.h。
+
++ `OffsetAttr` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被新增的 `GetOffset` 和 `SetOffset` 函数所替代。
+
+    ```cpp
+    SConstraintCanvas::FSlot* const Slot;
+    #if ENGINE_MAJOR_VERSION >= 5
+        const FMargin& Offset = Slot->GetOffset();
+        Slot->SetOffset(Offset); // 存在隐式类型转换：FMargin -> TAttribute<FMargin>
+    #else
+        const TAttribute<FMargin>& OffsetAttr = Slot->OffsetAttr;
+        Slot->OffsetAttr = OffsetAttr;
+    #endif
+    ```
+
++ `AnchorsAttr` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被新增的 `GetAnchors` 和 `SetAnchors` 函数所替代。
+
++ `AlignmentAttr` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被新增的 `GetAlignment` 和 `SetAlignment` 函数所替代。
+
++ `AutoSizeAttr` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被新增的 `GetAutoSize` 和 `SetAutoSize` 函数所替代。
+
++ `ZOrderAttr` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被新增的 `GetZOrder` 和 `SetZOrder` 函数所替代。
+
++ `Offset` 函数
+
+    从 UE5\.0 开始被移除，被新增的 `SetOffset` 函数所替代。
+
+    ```cpp
+    SConstraintCanvas::FSlot* const Slot;
+    const TAttribute<FMargin> OffsetAttr;
+    #if ENGINE_MAJOR_VERSION >= 5
+        Slot->SetOffset(OffsetAttr);
+    #else
+        SConstraintCanvas::FSlot& SlotRef = Slot->Offset(OffsetAttr);
+    #endif
+    ```
+
++ `Anchors` 函数
+
+    从 UE5\.0 开始被移除，被新增的 `SetAnchors` 函数所替代。
+
++ `Alignment` 函数
+
+    从 UE5\.0 开始被移除，被新增的 `SetAlignment` 函数所替代。
+
++ `AutoSize` 函数
+
+    从 UE5\.0 开始被移除，被新增的 `SetAutoSize` 函数所替代。
+
++ `ZOrder` 函数
+
+    从 UE5\.0 开始被移除，被新增的 `SetZOrder` 函数所替代。
+
+</details>
+
+
+<details>
+
+<summary>SBorder 类</summary>
+
+`SBorder` 类的声明请见 SBorder\.h。
+
++ `BorderImage` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被 `GetBorderImageAttribute`（或 `GetBorderImage`） 和 `SetBorderImage` 函数所替代。
+
+    `SBorder` 类从 UE4 开始就提供了 `SetBorderImage` 函数的实现，从 UE5\.0 开始提供了 `GetBorderImageAttribute` 和 `GetBorderImage` 函数的实现。`GetBorderImageAttribute` 和 `GetBorderImage` 函数的作用相同，区别在于返回值的类型。
+
+    ```cpp
+    const TSharedRef<SBorder> Border;
+    #if ENGINE_MAJOR_VERSION >= 5
+        const TSlateAttributeRef<const FSlateBrush*>* BorderImageAttribute = Border->GetBorderImageAttribute();
+        const FSlateBrush* const BorderImage = Border->GetBorderImage();
+        Border->SetBorderImage(BorderImageAttribute);
+    #else
+        const FInvalidatableBrushAttribute& BorderImageAttribute = Border->BorderImageAttribute;
+        // 设置属性时可以直接访问 BorderImageAttribute 或者使用函数
+        Border->BorderImageAttribute = BorderImageAttribute;
+        Border->SetBorderImage(BorderImageAttribute);
+    #endif
+    ```
+
++ `BorderBackgroundColor` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被 `GetBorderBackgroundColorAttribute`（或 `GetBorderBackgroundColor`） 和 `SetBorderBackgroundColor` 函数所替代。
+
+    与 `BorderImage` 属性的情况相同，`SBorder` 类从 UE4 开始就提供了 `SetBorderBackgroundColor` 函数的实现，从 UE5\.0 开始提供了 `GetBorderBackgroundColorAttribute` 和 `GetBorderBackgroundColor` 函数的实现。`GetBorderBackgroundColorAttribute` 和 `GetBorderBackgroundColor` 函数的作用相同，区别在于返回值的类型。
+
++ `DesiredSizeScale` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被 `GetDesiredSizeScaleAttribute`（或 `GetDesiredSizeScale`） 和 `SetDesiredSizeScale` 函数所替代。
+
+    与 `BorderImage` 属性的情况相同，`SBorder` 类从 UE4 开始就提供了 `SetDesiredSizeScale` 函数的实现，从 UE5\.0 开始提供了 `GetDesiredSizeScaleAttribute` 和 `GetDesiredSizeScale` 函数的实现。`GetDesiredSizeScaleAttribute` 和 `GetDesiredSizeScale` 函数的作用相同，区别在于返回值的类型。
+
++ `ShowDisabledEffect` 属性
+
+    从 UE5\.0 开始不再支持直接访问，被 `GetShowDisabledEffectAttribute`（或 `GetShowDisabledEffect`） 和 `SetShowEffectWhenDisabled` 函数所替代。
+
+    与 `BorderImage` 属性的情况相同，`SBorder` 类从 UE4 开始就提供了 `SetShowEffectWhenDisabled` 函数的实现，从 UE5\.0 开始提供了 `GetShowDisabledEffectAttribute` 和 `GetShowDisabledEffect` 函数的实现。`GetShowDisabledEffectAttribute` 和 `GetShowDisabledEffect` 函数的作用相同，区别在于返回值的类型。
+
+</details>
+
+
+<details>
+
 <summary>SOverlay 类</summary>
 
-`SOverlay` 的声明请见 SOverlay\.h。
+`SOverlay` 类的声明请见 SOverlay\.h。
 
 + `ZOrder` 属性
 
@@ -570,9 +1493,131 @@
 
 <details>
 
+<summary>SOverlay::FOverlaySlot 类</summary>
+
+`FOverlaySlot` 类的声明请见 SOverlay\.h。
+
+从 UE5\.0 开始，`FOverlaySlot` 的基类从 `TSlotBase` 类改为 `TBasicLayoutWidgetSlot` 类，原本属于 `FOverlaySlot` 的函数也被移至基类中。
+
+UE4 中 `FOverlaySlot` 类的继承关系如下。`TSlotBase` 和 `FSlotBase` 类的声明请见 SlotBase\.h。
+
+```mermaid
+graph TD
+
+FOverlaySlot("SOverlay::FOverlaySlot") -->| 继承 | TSlotBase("TSlotBase") -->| 继承 | FSlotBase("FSlotBase")
+```
+
+UE5 中 `FOverlaySlot` 类的继承关系如下。除 `TSlotBase` 和 `FSlotBase` 外，其他基类都是 UE5\.0 新增的类型；其中 `TBasicLayoutWidgetSlot`，`TPaddingWidgetSlotMixin` 和 `TAlignmentWidgetSlotMixin` 类的声明请见 BasicLayoutWidgetSlot\.h，`TWidgetSlotWithAttributeSupport` 类的声明请见 WidgetSlotWithAttributeSupport\.h，`ISlateAttributeContainer` 类的声明请见 SlateAttributeDefinition\.inl。
+
+```mermaid
+graph TD
+
+FOverlaySlot("SOverlay::FOverlaySlot") -->| 继承 | TBasicLayoutWidgetSlot("TBasicLayoutWidgetSlot")
+    TBasicLayoutWidgetSlot -->| 继承 | TWidgetSlotWithAttributeSupport("TWidgetSlotWithAttributeSupport")
+        TWidgetSlotWithAttributeSupport -->| 继承 | TSlotBase("TSlotBase") -->| 继承 | FSlotBase("FSlotBase")
+        TWidgetSlotWithAttributeSupport -->| 继承 | ISlateAttributeContainer("SlateAttributePrivate::ISlateAttributeContainer")
+    TBasicLayoutWidgetSlot -->| 继承 | TPaddingWidgetSlotMixin("TPaddingWidgetSlotMixin")
+    TBasicLayoutWidgetSlot -->| 继承 | TAlignmentWidgetSlotMixin("TAlignmentWidgetSlotMixin")
+```
+
++ `HAlign` 函数
+
+    从 UE5\.0 开始被移至 `TAlignmentWidgetSlotMixin` 类中，同时被废弃，被后者的 `SetHorizontalAlignment` 函数所替代。
+
+    ```cpp
+    SOverlay::FOverlaySlot* const Slot;
+    const EHorizontalAlignment Alignment;
+    #if ENGINE_MAJOR_VESION >= 5
+        Slot->SetHorizontalAlignment(Alignment);
+    #else
+        SOverlay::FOverlaySlot& SlotRef = Slot->HAlign(Alignment);
+    #endif
+    ```
+
++ `VAlign` 函数
+
+    从 UE5\.0 开始被移至 `TAlignmentWidgetSlotMixin` 类中，同时被废弃，被后者的 `SetVerticalAlignment` 函数所替代。
+
+    ```cpp
+    SOverlay::FOverlaySlot* const Slot;
+    const EVerticalAlignment Alignment;
+    #if ENGINE_MAJOR_VESION >= 5
+        Slot->SetVerticalAlignment(Alignment);
+    #else
+        SOverlay::FOverlaySlot& SlotRef = Slot->VAlign(Alignment);
+    #endif
+    ```
+
++ `Padding` 函数
+
+    从 UE5\.0 开始被移至 `TPaddingWidgetSlotMixin` 类中，同时被废弃，被后者的 `SetPadding` 函数所替代。
+
+    注意原来的 `Padding` 函数有四个重载，而 `SetPadding` 函数只有唯一的实现，在调用时请自行转换参数。
+
+    ```cpp
+    SOverlay::FOverlaySlot* const Slot;
+    #if ENGINE_MAJOR_VERSION >= 5
+        const FMargin Margin;
+        Slot->SetPadding(Margin);
+    #else
+        // 重载1
+        {
+            const FMargin Margin;
+            SOverlay::FOverlaySlot& SlotRef = Slot->Padding(Margin);
+        }
+        // 重载2
+        {
+            const float Uniform;
+            SOverlay::FOverlaySlot& SlotRef = Slot->Padding(Uniform);
+        }
+        // 重载3
+        {
+            const float Horizontal;
+            const float Vertical;
+            SOverlay::FOverlaySlot& SlotRef = Slot->Padding(Horizontal, Vertical);
+        }
+        // 重载4
+        {
+            const float Left;
+            const float Top;
+            const float Right;
+            const float Bottom;
+            SOverlay::FOverlaySlot& SlotRef = Slot->Padding(Left, Top, Right, Bottom);
+        }
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
+<summary>SDockTab 类</summary>
+
+`SDockTab` 类的声明请见 SDockTab\.h。
+
++ `Icon` 属性
+
+    从 UE5\.0 开始被废弃，为了兼容不同的引擎版本，请统一使用 `SetTabIcon` 函数来设置图标。
+
+    ```cpp
+    const FSlateBrush* const IconBrush;
+    const TSharedRef<SDockTab>& DockTab = SNew(SDockTab)
+        // 不建议的写法：
+        // .Icon(IconBrush)
+    ;
+    // 建议的写法：
+    DockTab->SetTabIcon(IconBrush);
+    ```
+
+</details>
+
+
+<details>
+
 <summary>IAssetRegistry 类</summary>
 
-`IAssetRegistry` 的声明请见 IAssetRegistry\.h。
+`IAssetRegistry` 类的声明请见 IAssetRegistry\.h。
 
 + `GetAssetByObjectPath` 函数
 
@@ -587,6 +1632,21 @@
     #endif
     ```
 
++ `GetAssetsByClass` 函数
+
+    从 UE5\.1 开始，路径参数类型为 `FName` 的重载被废弃，新增路径参数类型为 `FTopLevelAssetPath` 的重载。
+
+    ```cpp
+    TArray<FAssetData> AssetData;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        const FTopLevelAssetPath AssetPath;
+        IAssetRegistry::Get()->GetAssetsByClass(AssetPath, AssetData);
+    #else
+        const FName AssetPathName;
+        IAssetRegistry::Get()->GetAssetsByClass(AssetPathName, AssetData);
+    #endif
+    ```
+
 </details>
 
 
@@ -594,7 +1654,7 @@
 
 <summary>IUnloadedBlueprintData 类</summary>
 
-`IUnloadedBlueprintData` 的声明请见 ClassViewerFilter\.h。
+`IUnloadedBlueprintData` 类的声明请见 ClassViewerFilter\.h。
 
 + `GetClassPath` 函数
 
@@ -617,7 +1677,7 @@
 
 <summary>IStructViewerFilter 类</summary>
 
-`IStructViewerFilter` 的声明请见 StructViewerFilter\.h。
+`IStructViewerFilter` 类的声明请见 StructViewerFilter\.h。
 
 + `IsUnloadedStructAllowed` 函数
 
@@ -636,9 +1696,9 @@
 
 <details>
 
-<summary>IEditableTextProperty</summary>
+<summary>IEditableTextProperty 类</summary>
 
-`IEditableTextProperty` 的声明请见 STextPropertyEditableTextBox\.h。
+`IEditableTextProperty` 类的声明请见 STextPropertyEditableTextBox\.h。
 
 + `RequestRefresh` 函数
 
@@ -647,6 +1707,107 @@
     ```cpp
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 1 || ENGINE_MAJOR_VERSION < 5
         virtual void RequestRefresh() override;
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
+<summary>IAssetEditorInstance 类</summary>
+
+`IAssetEditorInstance` 类的声明请见 AssetEditorSubsystem\.h。
+
++ `GetToolbarTabId` 函数
+
+    从 UE5\.0 开始被废弃，引擎不再允许将工具栏页签添加到引擎编辑器的菜单中。
+
+    ```cpp
+    #if ENGINE_MAJOR_VERSION < 5
+        // 在 UE4 中将工具栏页签添加到引擎编辑器的某个菜单中
+        FTabManager::NewStack()
+        ->SetSizeCoefficient(0.1f)
+        ->SetHideTabWell(true)
+        ->AddTab(FAssetEditorToolkit::GetToolbarTabId(), ETabState::OpenedTab)
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
+<summary>TScriptArray 模板类</summary>
+
+`TScriptArray<AllocatorType>` 类的声明请见 ScriptArray\.h。
+
+</details>
+
+
+<details>
+
+<summary>TVector2 模板类</summary>
+
+`TVector2` 类的声明请见 Vector2D\.h。
+
++ `<` 运算符的重载
+
+    从 UE5\.1 开始被废弃，被新增的 `ComponentwiseAllLessThan` 函数所替代。
+
+    ```cpp
+    // FVector2D 继承自 TVector2
+    const FVector2D A;
+    const FVector2D B;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        const bool bLess = A.ComponentwiseAllLessThan(B);
+    #else
+        const bool bLess = A < B;
+    #endif
+    ```
+
++ `>` 运算符的重载
+
+    从 UE5\.1 开始被废弃，被新增的 `ComponentwiseAllGreaterThan` 函数所替代。
+
++ `<=` 运算符的重载
+
+    从 UE5\.1 开始被废弃，被新增的 `ComponentwiseAllLessOrEqual` 函数所替代。
+
++ `>=` 运算符的重载
+
+    从 UE5\.1 开始被废弃，被新增的 `ComponentwiseAllGreaterOrEqual` 函数所替代。
+
+</details>
+
+
+<details>
+
+<summary>TPanelChildren 模板类</summary>
+
+`TPanelChildren` 类的声明请见 Source/Runtime/SlateCore/Public/Layout/Children\.h。
+
++ `Insert` 函数
+
+    从 UE5\.0 开始废弃，被新增的 `InsertSlot` 函数所替代。
+
+    `InsertSlot` 函数要求传入一个 `SlotType::FSlotArguments` 类型的参数。其中 `SlotType` 是类型模板，指向具体的槽类，例如 `SConstraintCanvas::FSlot`。`FSlotArguments` 可以在具体的槽类中通过 `SLATE_SLOT_BEGIN_ARGS` 宏来创建，作为槽类的内部类。`FSlotArguments` 类和 `SLATE_SLOT_BEGIN_ARGS` 宏都是 UE5\.0 新增的 API，具体请见 DeclarativeSyntaxSupport\.h。
+
+    ```cpp
+    using FSlot = SConstraintCanvas::FSlot;
+    TPanelChildren<FSlot> Slots;
+    FSlot* const Slot = new FSlot();
+    #if ENGINE_MAJOR_VERSION >= 5
+        /**
+         * 注意，InsertSlot 函数的 SlotArguments 参数要求传入右值，如果传入左值就会出现编译错误
+         * 例如以下的写法是错误的，因为变量 SlotArguments 是一个左值：
+           FSlot::FSlotArguments SlotArguments(TUniquePtr<FSlot>(Slot));
+           Slots.InsertSlot(SlotArguments, Slots.Num());
+         */
+        Slots.InsertSlot(FSlot::FSlotArguments(TUniquePtr<FSlot>(Slot)) /** SlotArguments */, Slots.Num() /** Index */);
+    #else
+        // Insert 函数会将 Slot 包装成一个 TUniquePtr 对象，不需要担心内存泄漏的问题
+        Slots.Insert(Slot /** Slot */, Slots.Num() /** Index */);
     #endif
     ```
 
@@ -734,6 +1895,169 @@ const TMap<uint8, uint8> Map;
 
 <details>
 
+<summary>属性类</summary>
+
+各种属性类的声明请见 UnrealType\.h。
+
++ `FProperty`，`TProperty`，`TProperty_WithEqualityAndSerializer`，`FNumericProperty`，`TProperty_Numeric`，`FByteProperty`，`FInt8Property`，`FInt16Property`，`FIntProperty`，`FInt64Property`，`FUInt16Property`，`FUInt32Property`，`FUInt64Property`，`FFloatProperty`，`FDoubleProperty`，`FBoolProperty`，`FObjectPropertyBase`，`TFObjectPropertyBase`，`FObjectProperty`，`FWeakObjectProperty`，`FLazyObjectProperty`，`FSoftObjectProperty`，`FClassProperty`，`FSoftClassProperty`，`FInterfaceProperty`，`FNameProperty`，`FStrProperty`，`FArrayProperty`，`FMapProperty`，`FSetProperty`，`FStructProperty`，`FDelegateProperty`，`FMulticastDelegateProperty`，`TProperty_MulticastDelegate`，`FMulticastInlineDelegateProperty`，`FMulticastSparseDelegateProperty` 类的构造函数
+
+    从 UE5\.1 开始，这些类构造函数的长参数列表重载被废弃，新增了带 `FPropertyParamsBaseWithOffset` 类参数的重载。
+
+    ```cpp
+    // 以 FBoolProperty 为例
+
+    UStruct* const Owner;
+    const FName Name;
+    const EObjectFlags ObjectFlags;
+    const int32 Offset;
+    const EPropertyFlags PropertyFlags;
+    const uint32 BitMask;
+    const uint32 ElementSize;
+    const bool bIsNativeBool;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        /**
+         * 在 FBoolPropertyParams 中没有与 Offset 参数对应的属性，在 FProperty 及其派生类中也没有
+           对外提供传递 Offset 参数的接口，因此理论上无法传递 Offset 参数
+         */
+        UECodeGen_Private::FBoolPropertyParams Params;
+        Params.NameUTF8 = TCHAR_TO_UTF8(*Name.ToString()); // 对应 Name 参数
+        Params.ObjectFlags = ObjectFlags; // 对应 ObjectFlags 参数
+
+        FBoolProperty* Property = new FBoolProperty(Owner, Params);
+        Property->PropertyFlags = PropertyFlags; // 对应 PropertyFlags 参数
+        Property->SetBoolSize(ElementSize, bIsNativeBool, BitMask); // 对应 BitMask，ElementSize 和 bIsNativeBool 参数
+    #else
+        FBoolProperty* Property = new FBoolProperty(Owner, Name, ObjectFlags, Offset, PropertyFlags, BitMask, ElementSize, bIsNativeBool);
+    #endif
+    ```
+
++ `ExportTextItem` 函数
+
+    从 UE5\.1 开始被废弃，被新增的 `ExportTextItem_Direct` 和 `ExportTextItem_InContainer` 函数所替代。前者用于从属性的内存地址中读取属性值，后者用于从属性所属的对象中读取属性值。
+
+    ```cpp
+    const FName PropertyName;
+    if (FProperty* const Property = Container->GetClass()->FindPropertyByName(PropertyName))
+    {
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        // 从属性的内存地址中读取属性值
+        {
+            FString PropertyValue;
+            const uint8* const PropertyPtr = Property->ContainerPtrToValuePtr<uint8>(Container);
+            Property->ExportTextItem_Direct(PropertyValue, PropertyPtr, nullptr /** DefaultValue */, Container /** Parent */, 0 /** PortFlags */);
+        }
+        // 从属性所属的对象中读取属性值
+        {
+            FString PropertyValue;
+            Property->ExportTextItem_InContainer(PropertyValue, Container, nullptr /** DefaultValue */, Container /** Parent */, 0 /** PortFlags */);
+        }
+    #else
+        // 仅支持从属性的内存地址中读取属性值，相当于 ExportTextItem_Direct
+        {
+            FString PropertyValue;
+            const uint8* const PropertyPtr = Property->ContainerPtrToValuePtr<uint8>(Container);
+            Property->ExportTextItem(PropertyValue, PropertyPtr, nullptr /** DefaultValue */, Container /** Parent */, 0 /** PortFlags */);
+        }
+    #endif
+    }
+    ```
+
++ `ImportText` 函数
+
+    从 UE5\.1 开始被废弃，被新增的 `ImportText_Direct` 和 `ImportText_InContainer` 函数所替代。原理同 `ExportTextItem`，`ExportTextItem_Direct` 和 `ExportTextItem_InContainer` 函数。
+
+</details>
+
+
+<details>
+
+<summary>委托类</summary>
+
+委托类的声明请见 DelegateSignatureImpl\.inl。
+
++ `TUObjectMethodDelegate` 模板结构体
+
+    从 UE5\.1 开始被废弃，被 `TMethodPtr` 所替代。后者从 UE5\.0 开始新增，它是 `TMemFunPtrType` 模板结构体的一个别名。`TMemFunPtrType` 模板结构体的声明请见 DelegateInstanceInterface\.h。
+
+    ```cpp
+    DECLARE_DELEGATE(FMyDelegate);
+
+    class UMyObject : public UObject
+    {
+        GENERATED_BODY()
+
+    public:
+        UFUNCTION()
+        void Func();
+    };
+
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5 // 或 #if ENGINE_MAJOR_VERSION >= 5
+        const FMyDelegate::TMethodPtr<UMyObject>& Method = &UMyObject::Func;
+    #else
+        const FMyDelegate::TUObjectMethodDelegate<UMyObject>::FMethodPtr& Method = &UMyObject::Func;
+    #endif
+    ```
+
++ `TUObjectMethodDelegate_Const` 模板结构体
+
+    从 UE5\.1 开始被废弃，被 `TConstMethodPtr` 所替代。后者从 UE5\.0 开始新增，它是 `TMemFunPtrType` 模板结构体的一个别名。
+
+    ```cpp
+    DECLARE_DELEGATE(FMyDelegate);
+
+    class UMyObject : public UObject
+    {
+        GENERATED_BODY()
+
+    public:
+        UFUNCTION()
+        void Func() const;
+    };
+
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5 // 或 #if ENGINE_MAJOR_VERSION >= 5
+        const FMyDelegate::TConstMethodPtr<UMyObject>& Method = &UMyObject::Func;
+    #else
+        const FMyDelegate::TUObjectMethodDelegate_Const<UMyObject>::FMethodPtr& Method = &UMyObject::Func;
+    #endif
+    ```
+
++ `TUObjectMethodDelegate_OneVar` 模板结构体
+
+    与 `TUObjectMethodDelegate` 模板结构体的情况相同。
+
++ `TUObjectMethodDelegate_OneVar_Const` 模板结构体
+
+    与 `TUObjectMethodDelegate_Const` 模板结构体的情况相同。
+
++ `TUObjectMethodDelegate_TwoVars` 模板结构体
+
+    与 `TUObjectMethodDelegate` 模板结构体的情况相同。
+
++ `TUObjectMethodDelegate_TwoVars_Const` 模板结构体
+
+    与 `TUObjectMethodDelegate_Const` 模板结构体的情况相同。
+
++ `TUObjectMethodDelegate_ThreeVars` 模板结构体
+
+    与 `TUObjectMethodDelegate` 模板结构体的情况相同。
+
++ `TUObjectMethodDelegate_ThreeVars_Const` 模板结构体
+
+    与 `TUObjectMethodDelegate_Const` 模板结构体的情况相同。
+
++ `TUObjectMethodDelegate_FourVars` 模板结构体
+
+    与 `TUObjectMethodDelegate` 模板结构体的情况相同。
+
++ `TUObjectMethodDelegate_FourVars_Const` 模板结构体
+
+    与 `TUObjectMethodDelegate_Const` 模板结构体的情况相同。
+
+</details>
+
+
+<details>
+
 <summary>FTransform2D 类</summary>
 
 `FTransform2D` 类的声明请见 TransformCalculus2D\.h。
@@ -747,7 +2071,7 @@ const TMap<uint8, uint8> Map;
 
 <summary>FSimpleSlot 类</summary>
 
-`FSimpleSlot` 的声明请见 Children\.h。
+`FSimpleSlot` 类的声明请见 Children\.h。
 
 从 UE5\.0 开始被 `FSingleWidgetChildrenWithBasicLayoutSlot` 类所替代。注意引擎的注释是错的，并不存在 `FSingleWidgetChildrenWithSimpleSlot` 类。
 
@@ -766,7 +2090,7 @@ const TMap<uint8, uint8> Map;
 
 <summary>FEditorStyle 类</summary>
 
-`FEditorStyle` 的声明请见 EditorStyleSet\.h。
+`FEditorStyle` 类的声明请见 EditorStyleSet\.h。
 
 从 UE5\.0 开始，`FEditorStyle` 类中除 `ResetToDefault` 外的所有公开函数，全部可以改为通过 `FAppStyle` 类来调用，从 UE5\.1 开始要求必须通过 `FAppStyle` 类来调用。
 
@@ -786,7 +2110,7 @@ const TMap<uint8, uint8> Map;
 
 <summary>FSlateApplication 类</summary>
 
-`FSlateApplication` 的声明请见 SlateApplication\.h。
+`FSlateApplication` 类的声明请见 SlateApplication\.h。
 
 + `OnTouchStarted` 函数
 
@@ -828,7 +2152,7 @@ const TMap<uint8, uint8> Map;
 
 <summary>FNiagaraEmitterInstance 类</summary>
 
-`FNiagaraEmitterInstance` 的声明请见 NiagaraEmitterInstance\.h。
+`FNiagaraEmitterInstance` 类的声明请见 NiagaraEmitterInstance\.h。
 
 + `GetCachedEmitter` 函数
 
@@ -850,7 +2174,7 @@ const TMap<uint8, uint8> Map;
 
 <summary>FSlateFontCache 类</summary>
 
-`FSlateFontCache` 的声明请见 FontCache\.h。
+`FSlateFontCache` 类的声明请见 FontCache\.h。
 
 + `GetOverflowEllipsisText` 函数
 
@@ -876,7 +2200,7 @@ const TMap<uint8, uint8> Map;
 
 <summary>FKismetCompilerContext 类</summary>
 
-`FKismetCompilerContext` 的声明请见 KismetCompiler\.h。
+`FKismetCompilerContext` 类的声明请见 KismetCompiler\.h。
 
 + `OnPostCDOCompiled` 函数
 
@@ -889,6 +2213,67 @@ const TMap<uint8, uint8> Map;
         virtual void OnPostCDOCompiled();
     #endif
     ```
+
+</details>
+
+
+<details>
+
+<summary>FBlueprintEditorUtils 类</summary>
+
+`FBlueprintEditorUtils` 类的声明请见 BlueprintEditorUtils\.h。
+
++ `ImplementNewInterface` 函数
+
+    从 UE5\.1 开始，含 `FName` 类型参数的重载被含 `FTopLevelAssetPath` 类型参数的重载所替代。
+
+    ```cpp
+    UBlueprint* const Blueprint;
+    const FName ClassName;
+    #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+        const FTopLevelAssetPath& ClassPath = UClass::TryConvertShortTypeNameToPathName<UStruct>(ClassName.ToString(), ELogVerbosity::Warning, *FString::Printf(TEXT("AmbiguousClass: %s"), *ClassName.ToString()));
+        const bool bSuccessful = FBlueprintEditorUtils::ImplementNewInterface(Blueprint, ClassPath);
+    #else
+        const bool bSuccessful = FBlueprintEditorUtils::ImplementNewInterface(Blueprint, ClassName);
+    #endif
+    ```
+
++ `RemoveInterface` 函数
+
+    变化同 `ImplementNewInterface` 函数。
+
+</details>
+
+
+<details>
+
+<summary>FTicker 类</summary>
+
+`FTicker` 类的声明请见 Ticker\.h。
+
+从 UE5\.0 开始被废弃，被新增的 `FTSTicker` 类所替代。`FTSTicker` 是一种线程安全的类型，声明请见 Ticker\.h。
+
+```cpp
+#if ENGINE_MAJOR_VERSION >= 5
+    void UMyObject::RegisterTicker()
+    {
+        // TickHandle 的类型是 FTSTicker::FDelegateHandle
+        TickHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UMyObject::Tick));
+    }
+#else
+    void UMyObject::RegisterTicker()
+    {
+        // TickHandle 的类型是 FDelegateHandle
+        TickHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UMyObject::Tick));
+    }
+#endif
+
+    // FTSTicker 和 FTicker 回调的参数列表相同
+    void UMyObject::Tick(const float DeltaTime)
+    {
+        // ...
+    }
+```
 
 </details>
 
@@ -966,7 +2351,7 @@ struct MYPROJECT_API FMyBPStruct
 
 <summary>FSoftObjectPath 结构体</summary>
 
-`FSoftObjectPath` 的声明请见 SoftObjectPath\.h。
+`FSoftObjectPath` 结构体的声明请见 SoftObjectPath\.h。
 
 + 构造函数
 
@@ -976,7 +2361,7 @@ struct MYPROJECT_API FMyBPStruct
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 1 || ENGINE_MAJOR_VERSION < 5
         const FName AssetPath;
         // 重载版本1
-        const FSoftObjectPath Path1(AsstPath);
+        const FSoftObjectPath Path1(AssetPath);
 
         const FName AssetPathName;
         const FString SubPathString;
@@ -1011,7 +2396,7 @@ struct MYPROJECT_API FMyBPStruct
 
 <summary>FPreviewPlatformInfo 结构体</summary>
 
-`FPreviewPlatformInfo` 的声明请见 EditorEngine\.h。
+`FPreviewPlatformInfo` 结构体的声明请见 EditorEngine\.h。
 
 + 构造函数
 
@@ -1034,7 +2419,7 @@ struct MYPROJECT_API FMyBPStruct
 
 <summary>FAssetData 结构体</summary>
 
-`FAssetData` 的声明请见 Source/Runtime/CoreUObject/Public/AssetRegistry/AssetData\.h。
+`FAssetData` 结构体的声明请见 Source/Runtime/CoreUObject/Public/AssetRegistry/AssetData\.h。
 
 + `AssetClass` 属性
 
@@ -1071,7 +2456,7 @@ struct MYPROJECT_API FMyBPStruct
 
 <summary>FCoreUObjectDelegates 结构体</summary>
 
-`FCoreUObjectDelegates` 的声明请见 UObjectGlobals\.h。
+`FCoreUObjectDelegates` 结构体的声明请见 UObjectGlobals\.h。
 
 + `OnObjectSaved` 属性
 
@@ -1097,9 +2482,46 @@ struct MYPROJECT_API FMyBPStruct
 
 <details>
 
+<summary>FEditorDelegates 结构体</summary>
+
+`FEditorDelegates` 结构体的声明请见 Editor\.h。
+
++ `PreSaveWorld` 属性
+
+    从 UE5\.0 开始，`PreSaveWorld` 被新增的 `PreSaveWorldWithContext` 属性所替代。注意回调的参数列表有所变化。
+
+    ```cpp
+    #if ENGINE_MAJOR_VERSION >= 5
+        void UMyObject::RegisterDelegates()
+        {
+            PreSaveWorldHandle = FEditorDelegates::PreSaveWorldWithContext.AddUObject(this, &UMyObject::OnPreSaveWorld);
+        }
+
+        void UMyObject::OnPreSaveWorld(UWorld* const World, const FObjectPreSaveContext Context)
+        {
+            // ...
+        }
+    #else
+        void UMyObject::RegisterDelegates()
+        {
+            PreSaveWorldHandle = FEditorDelegates::PreSaveWorld.AddUObject(this, &UMyObject::OnPreSaveWorld);
+        }
+
+        void UMyObject::OnPreSaveWorld(const uint32 SaveFlags, UWorld* const World)
+        {
+            // ...
+        }
+    #endif
+    ```
+
+</details>
+
+
+<details>
+
 <summary>FKeyChain 结构体</summary>
 
-`FKeyChain` 的声明请见 KeyChainUtilities\.h。
+`FKeyChain` 结构体的声明请见 KeyChainUtilities\.h。
 
 + `MasterEncryptionKey` 属性
 
@@ -1165,7 +2587,7 @@ struct MYPROJECT_API FMyBPStruct
 
 <summary>FStaticParameterSet 结构体</summary>
 
-`FStaticParameterSet` 的声明请见 StaticParameterSet\.h。
+`FStaticParameterSet` 结构体的声明请见 StaticParameterSet\.h。
 
 + `StaticSwitchParameters` 属性
 
@@ -1232,7 +2654,7 @@ struct MYPROJECT_API FMyBPStruct
 
 <summary>FARFilter 结构体</summary>
 
-`FARFilter` 的声明请见 ARFilter\.h。
+`FARFilter` 结构体的声明请见 ARFilter\.h。
 
 + `ClassNames` 属性
 
@@ -1252,9 +2674,60 @@ struct MYPROJECT_API FMyBPStruct
 
 <details>
 
+<summary>FDetailsViewArgs 结构体</summary>
+
+`FDetailsViewArgs` 结构体在 UE4 的声明请见 IDetailsView\.h，在 UE5 的声明请见 DetailsViewArgs\.h。
+
++ 构造函数
+
+    从 UE5\.0 开始，参数列表不为空的构造函数被废弃，引擎要求使用默认构造函数创建实例后，再逐一设置其中的属性。
+
+    ```cpp
+    #if ENGINE_MAJOR_VERSION >= 5
+        FDetailsViewArgs Args;
+        Args.bUpdatesFromSelection = false;
+        Args.bLockable = false;
+        Args.bAllowSearch = true;
+        Args.NameAreaSettings = FDetailsViewArgs::ENameAreaSettings::ActorsUseNameArea;
+        Args.bHideSelectionTip = false;
+        Args.NotifyHook = nullptr;
+        Args.bSearchInitialKeyFocus = false;
+        Args.ViewIdentifier = NAME_None;
+    #else
+        FDetailsViewArgs Args(
+            false, // InUpdateFromSelection --> bUpdatesFromSelection
+            false, // InLockable --> bLockable
+            true, // InAllowSearch --> bAllowSearch
+            FDetailsViewArgs::ENameAreaSettings::ActorsUseNameArea, // InNameAreaSettings --> NameAreaSettings
+            false, // InHideSelectionTip --> bHideSelectionTip
+            nullptr, // InNotifyHook --> NotifyHook
+            false, // InSearchInitialKeyFocus --> bSearchInitialKeyFocus
+            NAME_None // InViewIdentifier --> ViewIdentifier
+        );
+    #end
+    ```
+
+</details>
+
+
+<details>
+
+<summary>ESPMode 枚举类</summary>
+
+`ESPMode` 枚举类的声明请见 SharedPointerInternals\.h。
+
+从 UE5\.0 开始，枚举值 `Fast` 被废弃，与之相关的 `FORCE_THREADSAFE_SHAREDPTRS` 宏也被移除。
+
+根据引擎的注释，枚举值 `Fast` 存在二义性，既可能被重定向至枚举值 `NotThreadSafe`，也可能被重定向至枚举值 `ThreadSafe`，为此建议开发者明确使用枚举值 `NoThreadSafe` 或者 `ThreadSafe`。
+
+</details>
+
+
+<details>
+
 <summary>IsDefaultSubobject 函数</summary>
 
-`IsDefaultSubobject` 的定义请见 UObjectBaseUtility\.cpp。
+`IsDefaultSubobject` 函数的定义请见 UObjectBaseUtility\.cpp。
 
 此前一个对象只要其 Outer 有效，并且 Outer 不是 CDO，该函数就会返回 true。而从 UE5\.1 开始，该函数的实现有所变化——除了满足前面提到的条件外，目标对象还必须不为 CDO，该函数才会返回 true。换言之，这个函数不能再用于判断一个对象是否为 CDO。
 
@@ -1263,9 +2736,32 @@ struct MYPROJECT_API FMyBPStruct
 
 <details>
 
+<summary>OnSetCVarFromIniEntry 函数</summary>
+
+`OnSetCVarFromIniEntry` 函数的声明请见 SystemSettings\.h。
+
+从 UE5\.1 开始被移至 `UE::ConfigUtilities` 命名空间中，请见 ConfigUtilities\.h 和 ConfigUtilities\.cpp。
+
+```cpp
+const TCHAR* const IniFilePath;
+const TCHAR* const Key;
+const TCHAR* const Value;
+const uint32 SetByFlags;
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+    UE::ConfigUtilities::OnSetCVarFromIniEntry(IniFilePath, Key, value, SetByFlags);
+#else
+    OnSetCVarFromIniEntry(IniFilePath, Key, value, SetByFlags);
+#endif
+```
+
+</details>
+
+
+<details>
+
 <summary>SLATE_SUPPORTS_SLOT 宏</summary>
 
-`SLATE_SUPPORTS_SLOT` 的定义请见 DeclarativeSyntaxSupport\.h。
+`SLATE_SUPPORTS_SLOT` 宏的定义请见 DeclarativeSyntaxSupport\.h。
 
 从 UE5\.0 开始被 `SLATE_SLOT_ARGUMENT` 宏所替代。
 
@@ -1288,7 +2784,7 @@ struct MYPROJECT_API FMyBPStruct
 
 <summary>ANY_PACKAGE 宏</summary>
 
-`ANY_PACKAGE` 的定义请见 ObjectMacros\.h。
+`ANY_PACKAGE` 宏的定义请见 ObjectMacros\.h。
 
 从 UE5\.1 开始被废弃。这个宏主要用于 `FindObject` 函数 `Outer` 参数的传递。从 UE5\.1 开始，引擎要求在调用 `FindObject` 函数时应当提供有效的 `Outer` 参数或者待查找对象的完整路径。`FindObject` 函数的声明请见 UObjectGlobals\.h。
 
@@ -1311,9 +2807,35 @@ const TCHAR* const ObjectName;
 
 <details>
 
+<summary>PROPERTY_BINDING 宏</summary>
+
+`PROPERTY_BINDING` 宏的定义请见 Widget\.h。
+
+`PROPERTY_BINDING` 宏用于创建一个控件蓝图属性的绑定，例如 `UTextBlock` 类的 `Text` 属性，它可以创建一个 `TAttribute<FText>` 类型的绑定。从 UE5\.1 开始，绝大部分控件类，如 `UImage` 和 `UTextBlock`，的蓝图属性不再支持直接访问。然而，`PROPERTY_BINDING` 宏仍然使用了直接访问蓝图属性的写法。因此使用 `PROPERTY_BINDING` 宏必然会产生编译警告。初步认为这是引擎自身的适配不够完善所致，建议使用 `PRAGMA_DISABLE_DEPRECATION_WARNINGS` 和 `PRAGMA_ENABLE_DEPRECATION_WARNINGS` 宏来忽略这些编译警告。编译器会忽略这两个宏之间的代码所产生的编译警告。
+
+```cpp
+void UMyTextBlock::BindProperty()
+{
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
+#endif
+    // 绑定 Text 属性，在 UE5.1 中该行代码会产生编译警告
+    const TAttribute<FText>& TextBinding = PROPERTY_BINDING(FText, Text);
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE;_MAJOR_VERSION > 5
+// 请务必记得使用 PRAGMA_ENABLE_DEPRECATION_WARNINGS 宏，否则当前代码块之后所有代码的编译警告都会被忽略
+PRAGMA_ENABLE_DEPRECATION_WARNINGS
+#endif
+}
+```
+
+</details>
+
+
+<details>
+
 <summary>_DebugBreakAndPromptForRemote 宏</summary>
 
-`_DebugBreakAndPromptForRemote` 的定义请见 AssertionMacros\.h。
+`_DebugBreakAndPromptForRemote` 宏的定义请见 AssertionMacros\.h。
 
 从 UE5\.1 开始被 `UE_DEBUG_BREAK_AND_PROMPT_FOR_REMOTE` 宏所替代。
 
@@ -1379,7 +2901,7 @@ const TCHAR* const ObjectName;
 
 <details>
 
-<summary>AssetEditorManager.h</summary>
+<summary>AssetEditorManager.h 文件</summary>
 
 从 UE5\.0 开始，该文件被移除，`FAssetEditorManager` 类也随之被废弃。
 
