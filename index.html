@@ -50,7 +50,21 @@
       },
       mermaidConfig: {
         querySelector: ".mermaid"
-      }
+      },
+      plugins: [
+        /**
+         * 解决 docsify-mermaid 插件需要刷新页面才能生效的问题
+         * 来源：https://github.com/Leward/mermaid-docsify/issues/31
+         */
+        function (hook) {
+          hook.doneEach(function () {
+            let mermaidConfig = {
+              querySelector: ".mermaid",
+            };
+            mermaid.run(mermaidConfig);
+          });
+        },
+      ],
     }
   </script>
   <!-- Docsify v4 -->
@@ -99,6 +113,7 @@
   </script>
   <script src="//cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="//unpkg.com/docsify-mermaid@2.0.0/dist/docsify-mermaid.js"></script>
-  <script src="//unpkg.com/docsify-mermaid-zoom/dist/docsify-mermaid-zoom.js"></script>
+  <!-- 修复代码暂时不能和 docsify-mermaid-zoom 插件共存 -->
+  <!-- <script src="//unpkg.com/docsify-mermaid-zoom/dist/docsify-mermaid-zoom.js"></script> -->
 </body>
 </html>
