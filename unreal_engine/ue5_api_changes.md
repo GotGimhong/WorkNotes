@@ -1901,7 +1901,11 @@ const TMap<uint8, uint8> Map;
 
 + `FProperty`，`TProperty`，`TProperty_WithEqualityAndSerializer`，`FNumericProperty`，`TProperty_Numeric`，`FByteProperty`，`FInt8Property`，`FInt16Property`，`FIntProperty`，`FInt64Property`，`FUInt16Property`，`FUInt32Property`，`FUInt64Property`，`FFloatProperty`，`FDoubleProperty`，`FBoolProperty`，`FObjectPropertyBase`，`TFObjectPropertyBase`，`FObjectProperty`，`FWeakObjectProperty`，`FLazyObjectProperty`，`FSoftObjectProperty`，`FClassProperty`，`FSoftClassProperty`，`FInterfaceProperty`，`FNameProperty`，`FStrProperty`，`FArrayProperty`，`FMapProperty`，`FSetProperty`，`FStructProperty`，`FDelegateProperty`，`FMulticastDelegateProperty`，`TProperty_MulticastDelegate`，`FMulticastInlineDelegateProperty`，`FMulticastSparseDelegateProperty` 类的构造函数
 
-    从 UE5\.1 开始，这些类构造函数的长参数列表重载被废弃，新增了带 `FPropertyParamsBaseWithOffset` 类参数的重载。
+    从 UE5\.1 开始，这些类构造函数的长参数列表重载被废弃，新增了带 `FPropertyParamsBaseWithOffset` 和 `FPropertyParamsBaseWithoutOffset` 类型参数的重载，对应 `FProperty` 的两种派生类：
+
+    + 需要传递 `Offset` 参数的类型，例如 `FByteProperty`；对于这种类型，仍然需要像 UE5\.0 及之前版本那样在外部计算 `Offset` 参数
+
+    + 不需要传递 `Offset` 参数的类型，例如 `FBoolProperty`；这种类型的构造函数已经内化了 `Offset` 参数的计算
 
     ```cpp
     // 以 FBoolProperty 为例
@@ -1915,14 +1919,11 @@ const TMap<uint8, uint8> Map;
     const uint32 ElementSize;
     const bool bIsNativeBool;
     #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
-        /**
-         * 在 FBoolPropertyParams 中没有与 Offset 参数对应的属性，在 FProperty 及其派生类中也没有
-           对外提供传递 Offset 参数的接口，因此理论上无法传递 Offset 参数
-         */
         UECodeGen_Private::FBoolPropertyParams Params;
         Params.NameUTF8 = TCHAR_TO_UTF8(*Name.ToString()); // 对应 Name 参数
         Params.ObjectFlags = ObjectFlags; // 对应 ObjectFlags 参数
 
+        // 不再需要向 FBoolProperty 类的构造函数传递 Offset 参数
         FBoolProperty* Property = new FBoolProperty(Owner, Params);
         Property->PropertyFlags = PropertyFlags; // 对应 PropertyFlags 参数
         Property->SetBoolSize(ElementSize, bIsNativeBool, BitMask); // 对应 BitMask，ElementSize 和 bIsNativeBool 参数
@@ -2811,7 +2812,7 @@ const TCHAR* const ObjectName;
 
 `PROPERTY_BINDING` 宏的定义请见 Widget\.h。
 
-`PROPERTY_BINDING` 宏用于创建一个控件蓝图属性的绑定，例如 `UTextBlock` 类的 `Text` 属性，它可以创建一个 `TAttribute<FText>` 类型的绑定。从 UE5\.1 开始，绝大部分控件类，如 `UImage` 和 `UTextBlock`，的蓝图属性不再支持直接访问。然而，`PROPERTY_BINDING` 宏仍然使用了直接访问蓝图属性的写法。因此使用 `PROPERTY_BINDING` 宏必然会产生编译警告。初步认为这是引擎自身的适配不够完善所致，建议使用 `PRAGMA_DISABLE_DEPRECATION_WARNINGS` 和 `PRAGMA_ENABLE_DEPRECATION_WARNINGS` 宏来忽略这些编译警告。编译器会忽略这两个宏之间的代码所产生的编译警告。
+`PROPERTY_BINDING` 宏用于创建一个控件蓝图属性的绑定，例如 `UTextBlock` 类的 `Text` 属性，它可以创建一个 `TAttribute<FText>` 类型的绑定。从 UE5\.1 开始，绝大部分控件类，如 `UImage` 和 `UTextBlock`，的蓝图属性不再支持直接访问。然而，`PROPERTY_BINDING` 宏仍然使用了直接访问蓝图属性的写法，因此使用 `PROPERTY_BINDING` 宏必然会产生编译警告。已和官方确认这是引擎自身的适配不够完善所致。建议使用 `PRAGMA_DISABLE_DEPRECATION_WARNINGS` 和 `PRAGMA_ENABLE_DEPRECATION_WARNINGS` 宏来屏蔽这些编译警告，这是引擎屏蔽编译警告的常用做法，编译器会忽略这两个宏之间的代码所产生的编译警告。
 
 ```cpp
 void UMyTextBlock::BindProperty()
