@@ -2890,7 +2890,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 ```cpp
 #if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1 || ENGINE_MAJOR_VERSION > 5
     // 需要依赖 UnrealEd 模块
-    #include "Classes/Settings/EditorStyleSettings.h"
+    #include "Settings/EditorStyleSettings.h"
 #else
     // 需要依赖 EditorStyle 模块
     #include "Classes/EditorStyleSettings.h"
