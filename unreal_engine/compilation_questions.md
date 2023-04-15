@@ -184,6 +184,28 @@
     [参考资料3](https://www.cnblogs.com/flyinggod/p/8324369.html)
 
 
+## 编译 UE5 源码时，提示找不到 uintptr_tx 标识符
+
+这个问题通常会在 Visual Studio 下编译到 mimalloc 第三方库时出现。通过了解源码出错处得知，代码 `_Atomic(uintptr_t)x` 被预处理成了 `uintptr_tx`，而代码原意是解析成 `uintptr_t x`。所以 mimalloc 库中原来的写法是有问题的。
+
+解决方法是 **在 UE5 中不要开启 FastBuild** 。据了解，Epic 官方也表示这方面并没做过多维护，目前主要是社区在对 FB for UE 做维护。
+
+另外，新版本的 mimalloc 库已经修复了这个问题。来源请见 https://github.com/microsoft/mimalloc 。
+
+
+## 使用 Visual Studio 2019 16\.11 版本编译 UE4 时出现报错
+
+报错信息如下：
+
+```
+命令“..\..\Build\BatchFiles\Build.bat -Target="UE4Editor Win64 Debug" -Target="ShaderCompileWorker Win64 Development -Quiet" -WaitMutex -FromMsBuild”已退出，代码为 6
+```
+
+该报错是指 Unreal Build Tool (UBT) 异常退出。原因是 UBT 此前在旧版本的 Visual Studio 2019，例如 16\.9 版本下进行过编译，但是没有在新版本的 Visual Studio 2019 下重新编译。当用旧版本的 UBT，唤起新版本 Visual Studio 编译器来编译项目代码和引擎时，就会出现错误。
+
+解决方法是更新 Visual Studio 的版本后，需要完全重新构建一次引擎和项目。
+
+
 ## 打包游戏时出现 ld.lld 的编译链接错误
 
 第一种错误信息：
