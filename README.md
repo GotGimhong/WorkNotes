@@ -46,9 +46,13 @@
 
     + [PAK](unreal_engine/pak.md)
 
-+ ini 系统
++ INI 系统
 
     + [ConfigCacheIni](unreal_engine/config_cache_ini.md)
+
++ UMG 系统（UI）
+
+    + [UI 剔除的性能表现](unreal_engine/ui_culling_performance.md)
 
 + 多线程
 
