@@ -42,6 +42,8 @@
 
         + [UI 剔除的性能表现](unreal_engine/ui_culling_performance.md)
 
+        + [UI 控件的复制](unreal_engine/ui_widget_duplication.md)
+
     + 多线程
 
         + [多线程的概述](unreal_engine/thread_summary.md)
