@@ -100,8 +100,12 @@
 
 ---
 
++ UGC
+
+    + [UGC 项目的设计](ugc/ugc_design.md)
+
+---
+
 + 其他
 
     + [如何提升游戏品质](misc/quality_game.md)
-
-    + [UGC 项目客户端的设计](misc/ugc_client.md)
