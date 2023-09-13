@@ -56,6 +56,8 @@
 
     + [UI 控件的复制](unreal_engine/ui_widget_duplication.md)
 
+    + [控件动画的默认帧率](unreal_engine/widget_animation_default_frame_rate.md)
+
 + 多线程
 
     + [多线程的概述](unreal_engine/thread_summary.md)
