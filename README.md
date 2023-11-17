@@ -26,6 +26,10 @@
 
     + [编译问题汇总](unreal_engine/compilation_questions.md)
 
++ 资产管理
+
+    + [资产的访问](unreal_engine/asset_access.md)
+
 + 对象系统
 
     + [对象的管理](unreal_engine/object_management.md)
