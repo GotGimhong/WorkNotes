@@ -68,7 +68,75 @@ Unable to merge actions 'UnrealEditor-ModuleA.lib' and 'UnrealEditor-ModuleA.lib
 在项目的 \.uproject 和 \.Target\.cs 文件中添加某个模块，是因为这个模块没有被依赖，却需要编译并且在适当的时机启动它；而当这个模块被其他模块依赖时，自然就会被编译并且在合适的时机启动，因此不必再在 \.uproject 和 \.Target\.cs 文件中添加了。
 
 
-## 3. 编译时提示找不到来自 Launch 模块的头文件
+## 3. 编译时提示工程没有将 A 插件列为依赖
+
+编译警告示例如下：
+
+```
+EXEC : warning : D:\MyProject\MyProject.uproject does not list plugin 'PluginA' as a dependency, but module 'MyProjectModule' depends on 'ModuleA'.
+```
+
+其中 MyProjectModule 模块来自 MyProject 工程，ModuleA 模块来自 PluginA 插件。
+
+该编译警告的原因是工程的某个模块依赖了 A 插件中的模块，而在工程的 \.uproject 文件中，并没有显式地将 A 插件列为依赖。编译警告来源请见引擎源码 UEBuildTarget\.cs，`ValidateModule` 函数。解决方法是在工程的 \.uproject 文件中，将 A 插件添加到 `Plugins` 字段内，示例如下：
+
+```json
+// MyProject.uproject
+{
+    ...
+    // MyProject 工程包含 MyProjectModule 模块
+    "Modules": [
+        {
+            "Name": "MyProjectModule",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        }
+    ],
+    // MyProject 工程显式地将 PluginA 插件列为依赖
+    "Plugins": [
+        {
+            "Name": "PluginA",
+            "Enabled": true
+        }
+    ]
+}
+```
+
+## 4. 编译时提示 A 插件没有将 B 插件列为依赖
+
+编译警告示例如下：
+
+```
+EXEC : warning : Plugin 'PluginA' does not list plugin 'PluginB' as a dependency, but module 'ModuleA' depends on module 'ModuleB'.
+```
+
+其中 ModuleA 模块来自 PluginA 插件，ModuleB 模块来自 PluginB 插件。
+
+该编译警告的原因是 A 插件中的模块依赖了 B 插件中的模块，而在 A 插件的 \.uplugin 文件中，并没有显式地将 B 插件列为依赖。编译警告来源请见引擎源码 UEBuildTarget\.cs，`ValidatePlugin` 函数。解决方法是在 A 插件的 \.uplugin 文件中，将 B 插件添加到 `Plugins` 字段内，示例如下：
+
+```json
+// PluginA.uplugin
+{
+    ...
+    // PluginA 插件包含 ModuleA 模块
+    "Modules": [
+        {
+            "Name": "ModuleA",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        }
+    ],
+    // PluginA 插件显式地将 PluginB 插件列为依赖
+    "Plugins": [
+        {
+            "Name": "PluginB",
+            "Enabled": true
+        }
+    ]
+}
+```
+
+## 5. 编译时提示找不到来自 Launch 模块的头文件
 
 在包含引擎 Launch 模块的头文件 Version\.h 时，提示找不到该头文件，原因是包含路径错误。正确的写法如下：
 
@@ -79,7 +147,7 @@ Unable to merge actions 'UnrealEditor-ModuleA.lib' and 'UnrealEditor-ModuleA.lib
 此外不必在模块的 Build\.cs 文件中添加 Launch 模块的依赖，因为包含 Version\.h 的目的是访问其中定义的宏，不涉及代码的链接。
 
 
-## 4. 编译时提示找不到 Components/SinglePropertyView.h 头文件
+## 6. 编译时提示找不到 Components/SinglePropertyView.h 头文件
 
 原因是从 5\.3 版本开始，引擎增加了 ScriptableEditorWidgets 模块，将 SinglePropertyView\.h 头文件从 UMGEditor 模块移至该模块中。存在相同问题的头文件还有 DetailsView\.h 和 PropertyViewBase\.h 。
 
@@ -97,7 +165,7 @@ if (BuildVersion.TryRead(BuildVersion.GetDefaultFileName(), out EngineVersion))
 ```
 
 
-## 5. 编译时提示 TCHAR 数组的哈希方法被废弃
+## 7. 编译时提示 TCHAR 数组的哈希方法被废弃
 
 该编译错误源于使用 `TCHAR*` 或者 `const TCHAR*` 类型作为 `TSet` 或者 `TMap` 的键类型，完整提示如下：
 
@@ -158,7 +226,7 @@ warning C4996: 'GetTypeHash': Hashing TCHAR arrays is deprecated - use PointerHa
 从接口的命名来看，**方法一是最佳实践**，方法二和三都是临时方案。
 
 
-## 6. 编译时提示 FormatStringSan.h 头文件中出现断言错误
+## 8. 编译时提示 FormatStringSan.h 头文件中出现断言错误
 
 UE5\.4 引入了日志参数的编译时检查，如果使用 `UE_LOG` 宏等方式打印日志，且日志参数存在错误，就会在编译时出现错误，示例如下：
 
