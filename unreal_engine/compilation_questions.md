@@ -330,6 +330,31 @@ D:\UE5.4\Engine\Source\Runtime\Core\Public\String\FormatStringSan.h(99): error C
     ```
 
 
+## 编辑器启动时提示模块加载失败，存在操作系统层面的错误
+
+问题的表现为，工程能够正常编译，然而编辑器启动至 75% 时，弹出对话框提示某个模块启动失败，示例如下：
+
+```
+The game module 'ModuleA' could not be loaded. There may be an operating system error, the module may not be properly set up, or a plugin which has been included into the build has not been turned on.
+```
+
+其中 ModuleA 是工程中的一个模块，该错误源于引擎源码 ProjectManager\.cpp，`LoadModulesForProject` 函数。
+
+出现该问题有以下两种可能：
+
+1. 编译该模块与启动该模块的引擎不是同一个；例如同一份工程，在某一台 PC 上进行编译，在另一台 PC 上运行，两台 PC 使用了不同的引擎，就会出现这个问题；
+
+2. 该模块依赖了某个插件，在工程的 \.uproject 文件中却没有显式地添加并启用这个插件；例如 ModuleA 模块依赖 PluginA 插件，就应当在工程 \.uproject 文件的 `Plugins` 字段里添加以下内容，否则就会导致 ModuleA 模块无法正常启动：
+
+    ```json
+    // 启用 PluginA 插件
+    {
+        "Name": "PluginA",
+        "Enabled": true
+    }
+    ```
+
+
 ## 编辑器启动时提示重新编译模块
 
 编辑器启动（尚未弹出进度信息）时，弹窗提示 “以下模块丢失或者在其他版本的引擎下编译……是否需要重新编译它们？（The following modules are missing or built with a different engine version: \.\.\. Would you like to rebuild them now?）”
