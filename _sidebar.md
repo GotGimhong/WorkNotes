@@ -48,6 +48,8 @@
 
         + [UI 控件的复制](unreal_engine/ui_widget_duplication.md)
 
+        + [UI 的自动销毁和常驻](unreal_engine/ui_persistence.md)
+
         + [控件动画的默认帧率](unreal_engine/widget_animation_default_frame_rate.md)
 
         + [SObjectTableRow 类触摸事件的问题](unreal_engine/table_row_touch_problem.md)
