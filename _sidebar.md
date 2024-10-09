@@ -66,11 +66,13 @@
 
     + 打包和热更新
 
+        + [Android 打包](unreal_engine/android_packaging.md)
+
         + [Android SDK 各种版本号的总结](unreal_engine/android_sdk_versions.md)
 
-        + [在 Windows 系统上构建 Metal Library](unreal_engine/windows_metal_library.md)
-
         + [iOS 打包](unreal_engine/ios_packaging.md)
+
+        + [在 Windows 系统上构建 Metal Library](unreal_engine/windows_metal_library.md)
 
     + 屏幕适配
 
