@@ -88,7 +88,33 @@
 
 ---
 
-## 7. 参考链接
+## 7. 参考解决方案
+
+有时候可能需要在一个 Cursor 工作区下添加多个根目录，例如开发虚幻项目，就需要将项目根目录和引擎根目录都添加到工作区，目的是方便 Agent 协助开发时阅读引擎源码。由于现在的开发环境普遍使用 Cursor，Codex 等辅助工具，就会在很多位置产生相关的 Agent 文档，以 Cursor 为例，同一个项目当中可能就会存在多个 `.cursor` 目录，位于项目的根目录，某个插件的根目录，脚本层根目录等。当我们将项目根目录添加到 Cursor 工作区时，这些 `.cursor` 目录都会被扫描，其中的 Rules 就有可能在与 Agent 对话的过程中被全部加载，产生 Tokens 浪费。当然，如果每份 Rule 都严格限制使用范围，例如脚本层的 Rules 只针对后缀为 .lua，.ts 等脚本文件生效，那么这种浪费可以在一定程度上得到缓解。然而这种方法并不能完全解决问题，因为要严格设置好每份 Rule 的使用范围并不是件容易的事情，而且不排除某些 Rule 的作用对象具有泛用性，例如项目根目录下的 Rule 和脚本层当中的 Rule 可能都会涉及项目资源，这就难以从 Rule 本身的使用范围去进行限制。
+
+这里介绍一种相对可行的方法，就是 **通过 `.gitignore` 文件设置 `.cursor` 目录过滤**。具体示例是这样的，在 MyProject 项目下开发一个插件，这个插件拥有自己的 `.cursor` 目录，包含 Rules 和 Skills，在 Cursor 工作区里，则加入 MyProject 项目的根目录和虚幻引擎根目录，目录结构大致如下：
+
+```
+/
+|— .gitignore
+|— MyProject/
+    |— .cursor/
+    |— Plugins/
+        |— MyPlugin/
+            |— .cursor/
+            |— ...
+        |— ...
+    |— ...
+|— UE5.4/
+```
+
+在开发插件时，遇到了大量无关的 Rules 被加载至上下文的问题。对此的解决方法是，**使用 Git 对 Cursor 工作区进行版本管理**，这样一来就可以在 Cursor 工作区下添加 `.gitignore` 文件，然后在其中过滤掉不必要的 `.cursor` 目录，Cursor IDE 可以识别工作区下的 `.gitignore` 文件，从而排除无关的 Rules。这种做法的核心是 **为 Cursor 工作区创建一个 Git 环境，从而能够通过 `.gitignore` 文件精确过滤不必要的 `.cursor` 目录**，至于其中的 MyProject 项目根目录和 UE5.4 引擎根目录，仍然可以使用原先的版本管理方式（如 SVN），并不需要连同工作区一起提交到远端仓库，只需要在本地通过 **软链接** 添加到工作区即可。
+
+至于使用 SVN 进行版本管理的做法，经过尝试发现并不可行，原因是 SVN 提交过滤的设置方式不如 Git 那么灵活，它不支持像 Git 那样，只通过工作区根目录下的一个 `.gitignore` 文件，就可以精确过滤掉位于子目录下的 `.cursor` 目录，只能在 `.cursor` 目录的父目录去设置过滤，但是这样操作又会对父目录的 SVN 属性产生修改，让 MyProject 项目的本地仓库变脏。
+
+---
+
+## 8. 参考链接
 
 - [Rules | Cursor Docs](https://cursor.com/docs/context/rules)  
 - [Agent Skills | Cursor Docs](https://cursor.com/docs/context/skills)  
