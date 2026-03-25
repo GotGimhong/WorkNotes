@@ -118,6 +118,12 @@
 
 ---
 
++ AI
+
+    + [Cursor IDE：工作区与 `.cursor` 目录扫描（规则 / 技能 / 子代理）](ai/cursor_workspace_filter.md)
+
+---
+
 + 其他
 
     + [如何提升游戏品质](misc/quality_game.md)
