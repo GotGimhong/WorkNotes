@@ -122,6 +122,8 @@
 
     + [Cursor IDE：工作区与 `.cursor` 目录扫描（规则 / 技能 / 子代理）](ai/cursor_workspace_filter.md)
 
+    + [Cursor 用量中的四类 Token 与控制 Cache Read](ai/cursor_tokens_consumption.md)
+
 ---
 
 + 其他
